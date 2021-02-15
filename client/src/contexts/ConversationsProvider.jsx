@@ -26,7 +26,7 @@ const useConversations = () => {
   return useContext(ConversationsContext);
 };
 
-const ConversationsProvider = ({ id, children }) => {
+const ConversationsProvider = ({ username, children }) => {
   const [conversations, setConversations] = useLocalStorage('conversations', []);
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const { contacts } = useContacts();
@@ -84,7 +84,7 @@ const ConversationsProvider = ({ id, children }) => {
   // Send message with socket.io.
   const sendMessage = (recipients, text) => {
     socket.emit('send-message', { recipients, text });
-    addMessageToConversation({ recipients, text, sender: id });
+    addMessageToConversation({ recipients, text, sender: username });
   };
 
   // Format conversation to display in application.
@@ -92,21 +92,21 @@ const ConversationsProvider = ({ id, children }) => {
     // Find the recipient(s) in the conversation.
     const recipients = conversation.recipients.map((recipient) => {
       const recipientInContacts = contacts.find((contact) => {
-        return contact.id === recipient;
+        return contact.username === recipient;
       });
-      const name = (recipientInContacts && recipientInContacts.name) || recipient;
+      const name = (recipientInContacts && recipientInContacts.username) || recipient;
       // Return recipient to display in conversation.
-      return { id: recipient, name };
+      return { username: recipient, name };
     });
 
     const messages = conversation.messages.map((message) => {
       // Find the sender(s) in the conversation's messages.
       const senderInContacts = contacts.find((contact) => {
-        return contact.id === message.sender;
+        return contact.username === message.sender;
       });
-      const name = (senderInContacts && senderInContacts.name) || message.sender;
+      const name = (senderInContacts && senderInContacts.username) || message.sender;
       // fromMe flag for the sender of the message. Id passed from App component.
-      const fromMe = id === message.sender;
+      const fromMe = username === message.sender;
       // Return message with flags.
       return { ...message, senderName: name, fromMe };
     });
@@ -131,10 +131,10 @@ const ConversationsProvider = ({ id, children }) => {
 export { useConversations, ConversationsProvider };
 
 ConversationsProvider.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  username: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   children: Object(PropTypes.object).isRequired,
 };
 
 ConversationsProvider.defaultProps = {
-  id: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  username: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
 };

@@ -11,28 +11,28 @@ const useSocket = () => {
   return useContext(SocketContext);
 };
 
-const SocketProvider = ({ id, children }) => {
+const SocketProvider = ({ username, children }) => {
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    if (!id) return null;
+    if (!username) return null;
     // Make request to server and pass in id for the request. In this case the sender of a message in the chat.
-    const newSocket = io('http://localhost:5000', { query: { id } });
+    const newSocket = io('http://localhost:5000', { query: { username } });
     setSocket(newSocket);
 
     // Close socket to prevent reruns of same request.
     return () => newSocket.disconnect();
-  }, [id]);
+  }, [username]);
   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };
 
 export { SocketProvider, useSocket };
 
 SocketProvider.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  username: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   children: Object(PropTypes.object).isRequired,
 };
 
 SocketProvider.defaultProps = {
-  id: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  username: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
 };

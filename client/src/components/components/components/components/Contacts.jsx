@@ -7,7 +7,7 @@ const Contacts = () => {
   return (
     <ListGroup variant="flush">
       {contacts.map((contact) => (
-        <ListGroup.Item key={contact.id}>{contact.name}</ListGroup.Item>
+        <ListGroup.Item key={contact.username}>{contact.username}</ListGroup.Item>
       ))}
     </ListGroup>
   );

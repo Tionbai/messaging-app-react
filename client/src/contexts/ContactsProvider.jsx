@@ -13,9 +13,9 @@ const ContactsProvider = ({ children }) => {
   const [contacts, setContacts] = useLocalStorage('contacts', []);
 
   // Create and store new contact.
-  const createContact = (id, name) => {
+  const createContact = (username) => {
     setContacts((prevContacts) => {
-      return [...prevContacts, { id, name }];
+      return [...prevContacts, { username }];
     });
   };
 

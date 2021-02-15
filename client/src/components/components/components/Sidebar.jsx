@@ -10,13 +10,17 @@ const CONVERSATIONS_KEY = 'conversations';
 const CONTACTS_KEY = 'contacts';
 
 const Sidebar = (props) => {
-  const { id } = props;
+  const { username, setUsername } = props;
   const [activeKey, setActiveKey] = useState(CONVERSATIONS_KEY);
   const [modalOpen, setModalOpen] = useState(false);
   const conversationsOpen = activeKey === CONVERSATIONS_KEY;
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const logout = () => {
+    setUsername(null);
   };
 
   return (
@@ -32,19 +36,18 @@ const Sidebar = (props) => {
         </Nav>
         <Tab.Content className="border-right overflow-auto flex-grow-1">
           <Tab.Pane eventKey={CONVERSATIONS_KEY}>
-            <Conversations id={id} />
+            <Conversations username={username} />
           </Tab.Pane>
           <Tab.Pane eventKey={CONTACTS_KEY}>
-            <Contacts id={id} />
+            <Contacts username={username} />
           </Tab.Pane>
         </Tab.Content>
-        <div className="p-2 border-top border-right small">
-          Your id:
-          <span className="text-muted">{` ${id}`}</span>
-        </div>
-        <Button onClick={() => setModalOpen(true)} className="rounded-0">
+        <Button onClick={() => setModalOpen(true)} className="rounded-0 p-2">
           New
           {conversationsOpen ? ' Conversation' : ' Contact'}
+        </Button>
+        <Button variant="outline" className="p-2 border-right" onClick={logout}>
+          Logout
         </Button>
       </Tab.Container>
       <Modal show={modalOpen} onHide={closeModal}>
@@ -61,9 +64,10 @@ const Sidebar = (props) => {
 export default Sidebar;
 
 Sidebar.propTypes = {
-  id: PropTypes.string,
+  username: PropTypes.string,
+  setUsername: PropTypes.func.isRequired,
 };
 
 Sidebar.defaultProps = {
-  id: PropTypes.string,
+  username: PropTypes.string,
 };

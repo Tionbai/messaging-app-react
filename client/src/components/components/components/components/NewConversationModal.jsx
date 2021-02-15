@@ -6,24 +6,24 @@ import { useConversations } from '../../../../contexts/ConversationsProvider';
 
 const NewConversationModal = (props) => {
   const { closeModal } = props;
-  const [selectedContactsIds, setSelectedContactsIds] = useState([]);
+  const [selectedContactsUsernames, setSelectedContactsUsernames] = useState([]);
   const { contacts } = useContacts();
   const { createConversation } = useConversations();
 
-  const handleCheckboxChange = (contactId) => {
-    setSelectedContactsIds((prevSelectedContactsIds) => {
-      if (prevSelectedContactsIds.includes(contactId)) {
-        return prevSelectedContactsIds.filter((prevId) => {
-          return contactId !== prevId;
+  const handleCheckboxChange = (contactUsername) => {
+    setSelectedContactsUsernames((prevSelectedContactsUsernames) => {
+      if (prevSelectedContactsUsernames.includes(contactUsername)) {
+        return prevSelectedContactsUsernames.filter((prevUsername) => {
+          return contactUsername !== prevUsername;
         });
       }
-      return [...prevSelectedContactsIds, contactId];
+      return [...prevSelectedContactsUsernames, contactUsername];
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createConversation(selectedContactsIds);
+    createConversation(selectedContactsUsernames);
     closeModal();
   };
   return (
@@ -32,12 +32,12 @@ const NewConversationModal = (props) => {
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           {contacts.map((contact) => (
-            <Form.Group controlId={contact.id} key={contact.id}>
+            <Form.Group controlId={contact.username} key={contact.username}>
               <Form.Check
                 type="checkbox"
-                value={selectedContactsIds.includes(contact.id)}
-                label={contact.name}
-                onChange={() => handleCheckboxChange(contact.id)}
+                value={selectedContactsUsernames.includes(contact.username)}
+                label={contact.username}
+                onChange={() => handleCheckboxChange(contact.username)}
               />
             </Form.Group>
           ))}
