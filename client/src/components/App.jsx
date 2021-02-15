@@ -21,5 +21,5 @@ export default function App() {
     </SocketProvider>
   );
 
-  return <>{id ? dashboard : <Login id={id} setId={setId} />}</>;
+  return <>{id ? dashboard : <Login setId={setId} />}</>;
 }

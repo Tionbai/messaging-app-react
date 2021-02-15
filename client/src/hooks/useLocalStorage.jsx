@@ -5,7 +5,10 @@ import { useState, useEffect } from 'react';
 // Add prefix to stored data to separate this application from other local storage data.
 const PREFIX = 'messaging-app-react-';
 
-export default function useLocalStorage(key, initialValue) {
+const useLocalStorage = (key, passedValue) => {
+  let initialValue = passedValue;
+  if (passedValue === undefined) initialValue = '';
+  // if (!initialValue === undefined) return '';
   // Take PREFIX and key from different parts of the application to save to local storage.
   const prefixedKey = PREFIX + key;
   // Get data from local storage if it exists, and then continue with operation.
@@ -24,4 +27,6 @@ export default function useLocalStorage(key, initialValue) {
   }, [prefixedKey, value]);
 
   return [value, setValue];
-}
+};
+
+export default useLocalStorage;
