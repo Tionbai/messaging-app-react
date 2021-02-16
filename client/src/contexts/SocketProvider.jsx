@@ -21,7 +21,7 @@ const SocketProvider = ({ username, children }) => {
     setSocket(newSocket);
 
     // Close socket to prevent reruns of same request.
-    return () => newSocket.disconnect();
+    return () => newSocket.close();
   }, [username]);
   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };

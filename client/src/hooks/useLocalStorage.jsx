@@ -8,7 +8,6 @@ const PREFIX = 'messaging-app-react-';
 const useLocalStorage = (key, passedValue) => {
   let initialValue = passedValue;
   if (passedValue === undefined) initialValue = '';
-  // if (!initialValue === undefined) return '';
   // Take PREFIX and key from different parts of the application to save to local storage.
   const prefixedKey = PREFIX + key;
   // Get data from local storage if it exists, and then continue with operation.

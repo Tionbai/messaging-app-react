@@ -14,7 +14,7 @@ const OpenConversation = () => {
 
     // Send message to the recipient(s) in the conversation.
     sendMessage(
-      selectedConversation.recipients.map((recipient) => recipient.id),
+      selectedConversation.recipients.map((recipient) => recipient.username),
       text,
     );
     setText('');

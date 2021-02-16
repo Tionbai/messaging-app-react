@@ -73,7 +73,9 @@ const ConversationsProvider = ({ username, children }) => {
 
   // Handle socket.io requests.
   useEffect(() => {
-    if (!socket) return null;
+    if (!socket) {
+      return null;
+    }
 
     socket.on('receive-message', addMessageToConversation);
 
