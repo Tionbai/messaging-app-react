@@ -2,7 +2,7 @@
 
 exports.catchErrors = (fn) => {
   return (req, res, next) => {
-    (req, res, next).catch((err) => {
+    fn(req, res, next).catch((err) => {
       // Validation errors
       if (typeof err === 'string') {
         res.status(400).json({
