@@ -1,14 +1,13 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Container, Form, Button, Modal, Alert } from 'react-bootstrap';
-import NewUserModal from './NewUserModal';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useUsers } from '../../contexts/UsersProvider';
 
 const Login = (props) => {
   const { setUsername } = props;
   const usernameRef = useRef();
   const passwordRef = useRef();
-  const [modalOpen, setModalOpen] = useState(false);
   const [invalidLogin, setInvalidLogin] = useState(false);
   const { checkIfValidLogin } = useUsers();
 
@@ -22,17 +21,9 @@ const Login = (props) => {
     return setInvalidLogin(true);
   };
 
-  const createNewUser = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
   return (
     <Container className="align-items-center d-flex flex-column" style={{ height: '100vh' }}>
-      <h1 className="py-2">Messaging App</h1>
+      <h2 className="py-2">Login</h2>
       <Form onSubmit={handleSubmit} className="w-100 my-auto">
         <Form.Group>
           <Form.Label>Username</Form.Label>
@@ -46,13 +37,10 @@ const Login = (props) => {
         <Button type="submit" className="mr-2">
           Login
         </Button>
-        <Button variant="secondary" onClick={createNewUser}>
-          Create a new user
-        </Button>
+        <Link to="register">
+          <Button variant="secondary">Create a new user</Button>
+        </Link>
       </Form>
-      <Modal show={modalOpen} onHide={closeModal}>
-        {modalOpen && <NewUserModal closeModal={closeModal} />}
-      </Modal>
     </Container>
   );
 };

@@ -18,9 +18,15 @@ const UsersProvider = ({ children }) => {
     return false;
   };
 
-  const createUser = (username, password) => {
+  const checkIfEmailExists = (email) => {
+    const emailExists = users.find((user) => user.email === email);
+    if (emailExists) return true;
+    return false;
+  };
+
+  const createUser = (username, email, password) => {
     setUsers((prevUsers) => {
-      return [...prevUsers, { username, password }];
+      return [...prevUsers, { username, email, password }];
     });
   };
 
@@ -36,6 +42,7 @@ const UsersProvider = ({ children }) => {
     users,
     createUser,
     checkIfUsernameExists,
+    checkIfEmailExists,
     checkIfValidLogin,
   };
 
@@ -45,5 +52,5 @@ const UsersProvider = ({ children }) => {
 export { useUsers, UsersProvider };
 
 UsersProvider.propTypes = {
-  children: Object(PropTypes.object).isRequired,
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
 };

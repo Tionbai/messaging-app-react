@@ -28,36 +28,36 @@ require('./models/Chatroom.js');
 require('./models/User.js');
 require('./models/Messages.js');
 
-const io = socket(5000, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-  },
-});
+// const io = socket(5000, {
+//   cors: {
+//     origin: 'http://localhost:3000',
+//     methods: ['GET', 'POST'],
+//   },
+// });
 
-io.on('connection', (socket) => {
-  const { username } = socket.handshake.query;
-  socket.join(username);
+// io.on('connection', (socket) => {
+//   const { username } = socket.handshake.query;
+//   socket.join(username);
 
-  Message.find().then((result) => {
-    socket.emit('output-messages', result);
-  });
+  // Message.find().then((result) => {
+  //   socket.emit('output-messages', result);
+  // });
 
-  socket.on('send-message', ({ recipients, text }) => {
-    recipients.forEach((recipient) => {
-      const newRecipients = recipients.filter((r) => r !== recipient);
-      newRecipients.push(username);
-      socket.broadcast.to(recipient).emit('receive-message', {
-        recipients: newRecipients,
-        sender: username,
-        text,
-      });
-    });
-    const message = new Message({
-      recipients: recipients,
-      sender: username,
-      text: text,
-    });
-    message.save();
-  });
-});
+  // socket.on('send-message', ({ recipients, text }) => {
+  //   recipients.forEach((recipient) => {
+  //     const newRecipients = recipients.filter((r) => r !== recipient);
+  //     newRecipients.push(username);
+  //     socket.broadcast.to(recipient).emit('receive-message', {
+  //       recipients: newRecipients,
+  //       sender: username,
+  //       text,
+  //     });
+  //   });
+    // const message = new Message({
+    //   recipients: recipients,
+    //   sender: username,
+    //   text: text,
+    // });
+    // message.save();
+//   });
+// });
