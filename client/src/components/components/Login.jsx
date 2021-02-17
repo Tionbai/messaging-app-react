@@ -2,23 +2,33 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import { useUsers } from '../../contexts/UsersProvider';
+import axios from 'axios';
 
 const Login = (props) => {
-  const { setUsername } = props;
+  const { history } = props;
   const usernameRef = useRef();
   const passwordRef = useRef();
-  const [invalidLogin, setInvalidLogin] = useState(false);
-  const { checkIfValidLogin } = useUsers();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (checkIfValidLogin(usernameRef.current.value, passwordRef.current.value)) {
-      setInvalidLogin(false);
-      return setUsername(usernameRef.current.value);
-    }
-    return setInvalidLogin(true);
+    axios
+      .post('/user/login', {
+        username: usernameRef.current.value,
+        password: passwordRef.current.value,
+      })
+      .then((response) => {
+        setErrorMessage('');
+        if (response.data.message) setValidationMessage(response.data.message);
+        localStorage.setItem('CHAT_Token', response.data.token);
+        history.push('/dashboard');
+      })
+      .catch((err) => {
+        setValidationMessage('');
+        if (err.response.data.message) setErrorMessage(err.response.data.message);
+      });
   };
 
   return (
@@ -33,7 +43,8 @@ const Login = (props) => {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" autoComplete="on" ref={passwordRef} required />
         </Form.Group>
-        {invalidLogin && <Alert variant="danger">Wrong username or password.</Alert>}
+        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+        {validationMessage && <Alert variant="success">{validationMessage}</Alert>}
         <Button type="submit" className="mr-2">
           Login
         </Button>
@@ -48,9 +59,5 @@ const Login = (props) => {
 export default Login;
 
 Login.propTypes = {
-  setUsername: PropTypes.func,
-};
-
-Login.defaultProps = {
-  setUsername: PropTypes.func,
+  history: Object(PropTypes.object).isRequired,
 };

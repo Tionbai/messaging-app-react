@@ -22,8 +22,8 @@ const Register = (props) => {
         password: passwordRef.current.value,
       })
       .then((response) => {
-        setValidationMessage(response.data.message);
         setErrorMessage('');
+        setValidationMessage(response.data.message);
         history.push('/login');
       })
       .catch((err) => {
