@@ -1,34 +1,18 @@
-import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { useAPI } from '../../contexts/APIProvider';
 
-const Register = (props) => {
-  const { history } = props;
+const Register = () => {
+  const { typeError, registerUser } = useAPI();
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const [errorMessage, setErrorMessage] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios
-      .post('/user/register', {
-        username: usernameRef.current.value,
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then((response) => {
-        setErrorMessage('');
-        setValidationMessage(response.data.message);
-        history.push('/login');
-      })
-      .catch((err) => {
-        setErrorMessage(err.response.data.message);
-      });
+    registerUser(usernameRef.current.value, emailRef.current.value, passwordRef.current.value);
   };
 
   return (
@@ -38,25 +22,25 @@ const Register = (props) => {
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control type="text" autoComplete="on" ref={usernameRef} required />
-          {errorMessage.includes('username') && <Alert variant="danger">{errorMessage}</Alert>}
+          {typeError('error-username') && (
+            <Alert variant="danger">{typeError('error-username')}</Alert>
+          )}
         </Form.Group>
         <Form.Group>
           <Form.Label>Email</Form.Label>
           <Form.Control type="text" autoComplete="on" ref={emailRef} required />
-          {errorMessage.includes('email') && <Alert variant="danger">{errorMessage}</Alert>}
+          {typeError('error-email') && (
+            <Alert variant="danger">{typeError('error-email')}</Alert>
+          )}
         </Form.Group>
         <Form.Group>
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="text"
-            autoComplete="on"
-            minLength={6}
-            ref={passwordRef}
-            required
-          />
+          <Form.Control type="text" autoComplete="on" ref={passwordRef} required />
+          {typeError('error-password') && (
+            <Alert variant="danger">{typeError('error-password')}</Alert>
+          )}
         </Form.Group>
         {/* TODO: Add validation message to screen before redirect to login, or on login screen after redirect */}
-        {validationMessage && validationMessage}
         <Button type="submit" className="mr-2">
           Create
         </Button>
@@ -69,7 +53,3 @@ const Register = (props) => {
 };
 
 export default Register;
-
-Register.propTypes = {
-  history: Object(PropTypes.object).isRequired,
-};

@@ -8,6 +8,8 @@ exports.catchErrors = (fn) => {
         res.status(400).json({
           message: err,
         });
+      } else if (typeof err === 'object') {
+        res.status(400).json(err);
       } else {
         next(err);
       }
@@ -36,13 +38,8 @@ exports.mongooseError = (err, req, res, next) => {
 // In development we show good error messages so if we hit a syntax error or any other error, we get a message explaining.
 exports.developmentErrors = (err, req, res, next) => {
   err.stack = err.stack || '';
-  const errorDetails = {
-    message: err.message,
-    status: err.status,
-    stack: err.stack,
-  };
 
-  res.status(err.status || 500).json(errorDetails); // Send JSON back
+  res.status(err.status || 500).json(err); // Send JSON back
 };
 
 // Production error handler

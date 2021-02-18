@@ -7,14 +7,26 @@ const jwt = require('jsonwebtoken');
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
 
-  const nameRegex = /[a-zA-Z\s]*$/;
+  const nameRegex = /^[a-zA-Z\s]*$/;
   const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
+  const errorMessages = [];
+
   if (!nameRegex.test(username))
-    throw 'Username can only contain alphabetical letters.';
+    errorMessages.push({
+      type: 'error-username',
+      message: 'Username can only contain alphabetical letters.',
+    });
   if (!emailRegex.test(email))
-    throw 'The email address provided is not supported.';
-  if (password.length < 6) throw 'Password must be at least 6 characters long.';
+    errorMessages.push({
+      type: 'error-email',
+      message: 'The email address provided is not supported.',
+    });
+  if (password.length < 6)
+    errorMessages.push({
+      type: 'error-password',
+      message: 'Password must be at least 6 characters long.',
+    });
 
   const usernameExists = await User.findOne({
     username,
@@ -23,8 +35,21 @@ exports.register = async (req, res) => {
     email,
   });
 
-  if (usernameExists) throw `The username ${username} is already taken.`;
-  if (emailExists) throw `There is already an account with ${email}. Login instead?`;
+  if (usernameExists)
+    errorMessages.push({
+      type: 'error-username',
+      message: `The username ${username} is already taken.`,
+    });
+
+  if (emailExists)
+    errorMessages.push({
+      type: 'error-email',
+      message: `There is already an account with ${email}. Login instead?`,
+    });
+
+  const newErrorMessages = [...new Set(errorMessages)];
+
+  if (newErrorMessages.length) throw newErrorMessages;
 
   const user = new User({
     username,
@@ -48,6 +73,7 @@ exports.login = async (req, res) => {
 
   if (!user) throw 'Username and password did not match.';
 
+  // ID is Mongoose document's _id. Set user token to id and secret.
   const token = jwt.sign({ id: user.id }, process.env.SECRET);
 
   res.json({

@@ -4,7 +4,12 @@
     "es2021": true,
     "jest": true
   },
-  "extends": ["plugin:react/recommended", "airbnb", "prettier/prettier", "plugin:prettier/recommended"],
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "prettier/prettier",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -14,7 +19,8 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "prettier/prettier": ["error", {}, { "usePrettierrc": true }]
+    "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
   },
   "settings": {
     "import/resolver": {

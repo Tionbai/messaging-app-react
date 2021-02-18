@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
 const Login = (props) => {
-  const { history } = props;
+  const { history, setupSocket } = props;
   const usernameRef = useRef();
   const passwordRef = useRef();
   const [errorMessage, setErrorMessage] = useState('');
@@ -21,12 +21,16 @@ const Login = (props) => {
       })
       .then((response) => {
         setErrorMessage('');
-        if (response.data.message) setValidationMessage(response.data.message);
-        localStorage.setItem('CHAT_Token', response.data.token);
-        history.push('/dashboard');
+        if (response.data.message) {
+          setValidationMessage(response.data.message);
+          localStorage.setItem('CHAT_Token', response.data.token);
+          history.push('/dashboard');
+          setupSocket();
+        }
       })
       .catch((err) => {
         setValidationMessage('');
+        console.log(err);
         if (err.response.data.message) setErrorMessage(err.response.data.message);
       });
   };
@@ -56,8 +60,9 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default withRouter(Login);
 
 Login.propTypes = {
   history: Object(PropTypes.object).isRequired,
+  setupSocket: PropTypes.func.isRequired,
 };

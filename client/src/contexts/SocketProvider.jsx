@@ -11,28 +11,44 @@ const useSocket = () => {
   return useContext(SocketContext);
 };
 
-const SocketProvider = ({ username, children }) => {
+const SocketProvider = ({ children }) => {
+  const token = localStorage.getItem('CHAT_Token');
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    if (!username) return null;
+    if (!token) return null;
     // Make request to server and pass in id for the request. In this case the sender of a message in the chat.
-    const newSocket = io('http://localhost:5000', { query: { username } });
+
+    // const newSocket = io('http://localhost:8000', { query: { username } });
+    const newSocket = io('http://localhost:8000', {
+      query: {
+        token,
+      },
+    });
+
+    newSocket.on('connect', () => {
+      console.log('Connected');
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected');
+    });
+
     setSocket(newSocket);
 
     // Close socket to prevent reruns of same request.
     return () => newSocket.close();
-  }, [username]);
+  }, []);
   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };
 
 export { SocketProvider, useSocket };
 
 SocketProvider.propTypes = {
-  username: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  children: Object(PropTypes.object).isRequired,
+  // token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  children: Object(PropTypes.array).isRequired,
 };
 
-SocketProvider.defaultProps = {
-  username: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-};
+// SocketProvider.defaultProps = {
+//   token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+// };

@@ -1,68 +1,46 @@
-import React, { useRef } from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Index from './components/Index';
-import { ContactsProvider } from '../contexts/ContactsProvider';
-import { ConversationsProvider } from '../contexts/ConversationsProvider';
 import { SocketProvider } from '../contexts/SocketProvider';
-import { UsersProvider } from '../contexts/UsersProvider';
+import { APIProvider } from '../contexts/APIProvider';
 
 const App = () => {
+  const token = localStorage.getItem('CHAT_Token');
   // Pass user's username down throughout application.
   const [username, setUsername] = useLocalStorage('username');
-  const usernameRef = useRef();
-  const passwordRef = useRef();
-
-  const dashboard = (
-    <SocketProvider username={username}>
-      <UsersProvider>
-        <ContactsProvider>
-          <ConversationsProvider username={username}>
-            <Route
-              exact
-              path="/dashboard"
-              component={Dashboard}
-              username={username}
-              setUsername={setUsername}
-            />
-          </ConversationsProvider>
-        </ContactsProvider>
-      </UsersProvider>
-    </SocketProvider>
-  );
 
   return (
-    <Router history={createBrowserHistory()}>
+    <APIProvider>
       <Switch>
-        <UsersProvider>
+        <SocketProvider token={token}>
           <Route exact path="/" component={Index} />
           <Route
             exact
             path="/register"
             component={Register}
             username={username}
-            usernameRef={usernameRef}
-            passwordRef={passwordRef}
             setUsername={setUsername}
           />
+          <Route exact path="/login">
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            {token ? <Redirect to="/dashboard" /> : (props) => <Login {...props} />}
+          </Route>
           <Route
             exact
-            path="/login"
-            component={Login}
-            username={username}
-            usernameRef={usernameRef}
-            passwordRef={passwordRef}
-            setUsername={setUsername}
+            path="/dashboard"
+            render={(props) => (
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              <Dashboard {...props} />
+            )}
           />
-          {dashboard}
-        </UsersProvider>
+        </SocketProvider>
       </Switch>
-    </Router>
+    </APIProvider>
   );
 };
 
