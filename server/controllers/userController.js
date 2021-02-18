@@ -66,12 +66,20 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
+
+  const usernameExists = await User.findOne({
+    username,
+  });
+
+  if (!usernameExists)
+    throw `Username ${username} does not exist.`;
+
   const user = await User.findOne({
     username,
     password: sha256(password + process.env.SALT),
   });
 
-  if (!user) throw 'Username and password did not match.';
+  if (usernameExists && !user) throw 'The password is incorrect.';
 
   // ID is Mongoose document's _id. Set user token to id and secret.
   const token = jwt.sign({ id: user.id }, process.env.SECRET);

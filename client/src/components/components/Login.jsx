@@ -1,38 +1,25 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { useAPI } from '../../contexts/APIProvider';
+import history from '../../history';
 
-const Login = (props) => {
-  const { history, setupSocket } = props;
+const Login = () => {
+  const { loginUser, apiResponseMessage } = useAPI();
   const usernameRef = useRef();
   const passwordRef = useRef();
-  const [errorMessage, setErrorMessage] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('CHAT_Token');
+    if (token) {
+      history.push('/dashboard');
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios
-      .post('/user/login', {
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then((response) => {
-        setErrorMessage('');
-        if (response.data.message) {
-          setValidationMessage(response.data.message);
-          localStorage.setItem('CHAT_Token', response.data.token);
-          history.push('/dashboard');
-          setupSocket();
-        }
-      })
-      .catch((err) => {
-        setValidationMessage('');
-        console.log(err);
-        if (err.response.data.message) setErrorMessage(err.response.data.message);
-      });
+    loginUser(usernameRef.current.value, passwordRef.current.value);
   };
 
   return (
@@ -47,8 +34,12 @@ const Login = (props) => {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" autoComplete="on" ref={passwordRef} required />
         </Form.Group>
-        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-        {validationMessage && <Alert variant="success">{validationMessage}</Alert>}
+        {apiResponseMessage.type === 'error' && (
+          <Alert variant="danger">{apiResponseMessage.message}</Alert>
+        )}
+        {apiResponseMessage.type === 'success' && (
+          <Alert variant="success">{apiResponseMessage.message}</Alert>
+        )}
         <Button type="submit" className="mr-2">
           Login
         </Button>
@@ -61,8 +52,3 @@ const Login = (props) => {
 };
 
 export default withRouter(Login);
-
-Login.propTypes = {
-  history: Object(PropTypes.object).isRequired,
-  setupSocket: PropTypes.func.isRequired,
-};

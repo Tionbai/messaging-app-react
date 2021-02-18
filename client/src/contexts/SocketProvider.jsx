@@ -19,7 +19,6 @@ const SocketProvider = ({ children }) => {
     if (!token) return null;
     // Make request to server and pass in id for the request. In this case the sender of a message in the chat.
 
-    // const newSocket = io('http://localhost:8000', { query: { username } });
     const newSocket = io('http://localhost:8000', {
       query: {
         token,

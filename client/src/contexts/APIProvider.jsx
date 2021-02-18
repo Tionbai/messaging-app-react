@@ -37,7 +37,21 @@ const APIProvider = ({ children }) => {
     }
   };
 
-  const value = { apiResponseMessage, typeError, registerUser };
+  const loginUser = async (username, password) => {
+    try {
+      const response = await axios.post('/user/login', {
+        username,
+        password,
+      });
+      history.push('/dashboard');
+      localStorage.setItem('CHAT_Token', response.data.token);
+      return setApiResponseMessage({ type: 'success', message: response.data.message });
+    } catch (err) {
+      return setApiResponseMessage({ type: 'error', message: err.response.data.message });
+    }
+  };
+
+  const value = { apiResponseMessage, typeError, registerUser, loginUser };
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
 };

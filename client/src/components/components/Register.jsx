@@ -9,7 +9,7 @@ const Register = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     registerUser(usernameRef.current.value, emailRef.current.value, passwordRef.current.value);

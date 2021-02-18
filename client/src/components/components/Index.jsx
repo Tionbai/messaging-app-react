@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import history from '../../history';
 
-const Index = (props) => {
-  const { history } = props;
-
+const Index = () => {
   useEffect(() => {
     const token = localStorage.getItem('CHAT_Token');
     if (token) {
@@ -17,7 +15,3 @@ const Index = (props) => {
 };
 
 export default Index;
-
-Index.propTypes = {
-  history: Object(PropTypes.object).isRequired,
-};
