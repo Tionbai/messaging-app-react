@@ -3,20 +3,25 @@ const mongoose = require('mongoose');
 const Chatroom = mongoose.model('Chatroom');
 
 exports.createChatroom = async (req, res) => {
-  const { name } = req.body;
+  const { name, users } = req.body;
+
+  if (!name || !users) throw 'Name and users must be present.';
 
   const nameRegex = /^[A-Za-z\s]+$/;
 
   if (!nameRegex.test(name))
     throw 'Chatroom name can only contain alphabetical letters.';
 
+  if (!users.length) throw 'The chatroom must have users.';
+
+  const chatroomExists = await Chatroom.findOne({ name, users });
+
+  if (chatroomExists) throw 'The chatroom already exists.';
+
   const chatroom = new Chatroom({
     name,
+    users,
   });
-
-  const chatroomExists = await Chatroom.findOne({ name });
-
-  if (chatroomExists) throw 'Chatroom with that name already exists.';
 
   await chatroom.save();
 

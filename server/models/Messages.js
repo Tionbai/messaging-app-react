@@ -11,17 +11,9 @@ const messageSchema = new mongoose.Schema({
     required: 'User is required.',
     ref: 'User',
   },
-  sender: {
-    type: String,
-    required: true,
-  },
-  recipients: {
-    type: Array,
-    required: true,
-  },
   text: {
     type: String,
-    required: true,
+    required: 'Text is required.',
   },
   created: {
     type: Date,

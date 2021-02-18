@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useAPI } from '../../contexts/APIProvider';
 import history from '../../history';
 
-const Login = () => {
+const Login = (props) => {
+  const { token } = props;
   const { loginUser, apiResponseMessage } = useAPI();
   const usernameRef = useRef();
   const passwordRef = useRef();
 
   useEffect(() => {
-    const token = localStorage.getItem('CHAT_Token');
     if (token) {
       history.push('/dashboard');
     }
@@ -52,3 +53,7 @@ const Login = () => {
 };
 
 export default withRouter(Login);
+
+Login.propTypes = {
+  token: PropTypes.string.isRequired,
+};

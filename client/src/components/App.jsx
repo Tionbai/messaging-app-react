@@ -23,7 +23,7 @@ const App = () => {
             path="/login"
             render={(props) => (
               /* eslint-disable-next-line react/jsx-props-no-spreading */
-              <Login {...props} />
+              <Login {...props} token={token} />
             )}
           />
           <Route

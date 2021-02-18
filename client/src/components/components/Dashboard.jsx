@@ -1,25 +1,16 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import Sidebar from './components/Sidebar';
 import Chatroom from './components/Chatroom';
 
 const Dashboard = (props) => {
-  const { token } = props;
   return (
-    <main className="d-flex" style={{ height: '100vh' }}>
+    <main className="d-flex vh-100 vw-100">
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Sidebar {...props} />
-      <div>
-        {token}
-        <Chatroom />
-      </div>
+      <Chatroom />
     </main>
   );
 };
 
 export default withRouter(Dashboard);
-
-Dashboard.propTypes = {
-  token: PropTypes.string.isRequired,
-};

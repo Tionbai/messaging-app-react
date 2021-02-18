@@ -7,7 +7,7 @@ const Chatroom = () => {
   // Display and format conversation based on sender and recipient.
   return (
     <section className="d-flex flex-column flex-grow-1">
-      <section className="d-flex flex-column flex-grow-1">Chatroom section</section>
+      <section className="m-2 flex-grow-1">Chatroom section</section>
       <Form>
         <Form.Group className="m-2">
           <InputGroup>
