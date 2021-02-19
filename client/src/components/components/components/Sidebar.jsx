@@ -4,14 +4,19 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../contexts/APIProvider';
 import { useChatroom } from '../../../contexts/ChatroomProvider';
 import CreateChatroomModal from './CreateChatroomModal';
+import JoinChatroomModal from './JoinChatroomModal';
 
 const Sidebar = () => {
   const [openCreateChatroomModal, setOpenCreateChatroomModal] = useState(false);
+  const [openJoinChatroomModal, setOpenJoinChatroomModal] = useState(false);
   const { chatrooms } = useAPI();
   const { selectChatroom } = useChatroom();
 
-  const closeModal = () => {
+  const closeCreateModal = () => {
     setOpenCreateChatroomModal(false);
+  };
+  const closeJoinModal = () => {
+    setOpenJoinChatroomModal(false);
   };
 
   return (
@@ -39,12 +44,21 @@ const Sidebar = () => {
       </section>
       <Button
         className="p-2 border-top rounded-0"
+        onClick={() => setOpenJoinChatroomModal(true)}
+      >
+        Join chatroom
+      </Button>
+      <Button
+        className="p-2 border-top rounded-0"
         onClick={() => setOpenCreateChatroomModal(true)}
       >
         New chatroom
       </Button>
-      <Modal show={openCreateChatroomModal} onHide={closeModal}>
-        <CreateChatroomModal closeModal={closeModal} />
+      <Modal show={openJoinChatroomModal} onHide={closeJoinModal}>
+        <JoinChatroomModal closeModal={closeJoinModal} />
+      </Modal>
+      <Modal show={openCreateChatroomModal} onHide={closeCreateModal}>
+        <CreateChatroomModal closeModal={closeCreateModal} />
       </Modal>
       <Button variant="outline" className="p-2 border-top rounded-0">
         Logout

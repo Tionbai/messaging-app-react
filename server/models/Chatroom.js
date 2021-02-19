@@ -1,18 +1,30 @@
 const mongoose = require('mongoose');
 
-const chatroomSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: 'Name is required.',
+const chatroomSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: 'Name is required.',
+    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: 'Users are required.',
+        ref: 'User',
+      },
+    ],
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message',
+      },
+    ],
   },
-  users: {
-    type: Array,
-    required: 'Users are required.',
+  {
+    timestamps: true,
   },
-  messages: [{
-    ref: 'Message',
-    type: mongoose.Schema.Types.ObjectID,
-  }]
-});
+);
 
-module.exports = mongoose.model('Chatroom', chatroomSchema);
+const Chatroom = mongoose.model('Chatroom', chatroomSchema);
+
+module.exports = Chatroom;

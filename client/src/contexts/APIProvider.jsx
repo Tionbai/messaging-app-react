@@ -62,6 +62,8 @@ const APIProvider = ({ children }) => {
     setToken(localStorage.getItem('CHAT_Token'));
   }, [loginUser]);
 
+  // TODO: User should only get chatrooms they are involved with.
+
   // Get all chatrooms.
   const getChatrooms = async () => {
     const headers = {
@@ -89,7 +91,7 @@ const APIProvider = ({ children }) => {
   };
 
   // Create new chatroom.
-  const createChatroom = async (chatroom, users) => {
+  const createChatroom = async (chatroomName) => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -97,16 +99,40 @@ const APIProvider = ({ children }) => {
       const response = await axios.post(
         '/chatroom',
         {
-          name: chatroom,
-          users,
+          name: chatroomName,
         },
         {
           headers,
         },
       );
       setChatrooms([...getChatrooms()]);
+      console.log(response.data);
       return response.data;
     } catch (err) {
+      console.log(err.reponse);
+      return err.response;
+    }
+  };
+
+  // Join existing chatroom.
+  const joinChatroom = async (chatroomName) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.post(
+        '/chatroom/join',
+        {
+          name: chatroomName,
+        },
+        {
+          headers,
+        },
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.reponse);
       return err.response;
     }
   };
@@ -127,6 +153,7 @@ const APIProvider = ({ children }) => {
     loginUser,
     getChatrooms,
     createChatroom,
+    joinChatroom,
     chatrooms,
     setChatrooms,
     messages,

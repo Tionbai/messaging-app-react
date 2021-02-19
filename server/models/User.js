@@ -14,9 +14,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: 'Password is required.',
     },
+    chatrooms: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Chatroom',
+      },
+    ],
     messages: [
       {
-        type: mongoose.Schema.Types.ObjectID,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message',
       },
     ],
   },
@@ -25,4 +32,6 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

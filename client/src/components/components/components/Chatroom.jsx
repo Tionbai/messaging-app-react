@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, InputGroup, ListGroup, Button } from 'react-bootstrap';
+import { v4 as uuidv4 } from 'uuid';
 import { useChatroom } from '../../../contexts/ChatroomProvider';
 
 const Chatroom = () => {
@@ -33,7 +34,7 @@ const Chatroom = () => {
             return (
               <ListGroup.Item
                 className="my-1 border"
-                key={message._id}
+                key={uuidv4()}
                 ref={lastMessage ? lastMessageRef : null}
               >
                 {message.message}

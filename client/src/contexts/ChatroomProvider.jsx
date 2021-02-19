@@ -44,7 +44,6 @@ const ChatroomProvider = ({ children }) => {
 
   const addMessageToChatroom = ({ chatroom, sender, message }) => {
     setMessages([...messages, { chatroom, sender, message }]);
-    // console.log({ chatroom, sender, message });
   };
 
   useEffect(() => {
@@ -57,7 +56,6 @@ const ChatroomProvider = ({ children }) => {
 
   const sendMessage = (text) => {
     socket.emit('send-message', { chatroomId: selectedChatroom[0]._id, message: text });
-    // addMessageToChatroom({ chatroom: selectedChatroom[0]._id, sender: token, message: text });
   };
 
   const value = {

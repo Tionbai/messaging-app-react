@@ -1,12 +1,13 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
+const socket = require('socket.io');
+const jwt = require('jsonwebtoken');
 // Bring in all the models
+const mongoose = require('mongoose');
 const Chatroom = require('./models/Chatroom.js');
 const User = require('./models/User.js');
 const Message = require('./models/Message.js');
+
 const app = require('./app.js');
-const socket = require('socket.io');
-const jwt = require('jsonwebtoken');
 
 const PORT = process.env.PORT || 8000;
 
@@ -24,6 +25,7 @@ io.use(async (socket, next) => {
     const token = socket.handshake.query.token;
     const payload = jwt.verify(token, process.env.SECRET);
     socket.userId = payload.id;
+    socket.join(socket.userId);
     next();
   } catch (err) {
     console.log(err);
@@ -39,18 +41,36 @@ io.on('connection', (socket) => {
 
   socket.on('send-message', async ({ chatroomId, message }) => {
     if (message.trim().length > 0) {
+      const chatroom = await Chatroom.findOne({ _id: chatroomId });
       const user = await User.findOne({ _id: socket.userId });
+
+      chatroom.users.forEach((user) => {
+        io.to(user._id.toString()).emit('receive-message', {
+          chatroom: chatroomId,
+          sender: user._id.toString(),
+          message: message,
+        });
+      });
+
       const newMessage = new Message({
         chatroom: chatroomId,
-        sender: user._id,
+        sender: user._id.toString(),
         message: message,
       });
       await newMessage.save();
-      socket.emit('receive-message', {
-        chatroom: chatroomId,
-        sender: user._id,
-        message: message,
-      });
+
+      // TODO: Start updating database when database is cleared and app is ready for prototype.
+      const updateChatroom = async (chatroomId, userId, messageId) => {
+        const chatroom = await Chatroom.findOne({ _id: chatroomId });
+        const user = await User.findOne({ _id: userId });
+
+        await chatroom.messages.push(messageId);
+        await user.messages.push(messageId);
+
+        await chatroom.save();
+        await user.save();
+      };
+      // await updateChatroom(chatroomId, user._id, newMessage._id);
     }
   });
 });
@@ -68,7 +88,4 @@ mongoose.connection.on('error', (err) => {
 
 mongoose.connection.once('open', async () => {
   console.log('MongoDB connected.');
-
-  // const message = await Message.find({ chatroom: '602c00106d051637a82fa497' });
-  // console.log(message);
 });
