@@ -3,21 +3,12 @@ import { ListGroup, Button, Modal } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../contexts/APIProvider';
 import { useChatroom } from '../../../contexts/ChatroomProvider';
-import CreateChatroomModal from './CreateChatroomModal';
-import JoinChatroomModal from './JoinChatroomModal';
+import ChatroomModal from './ChatroomModal';
 
 const Sidebar = () => {
-  const [openCreateChatroomModal, setOpenCreateChatroomModal] = useState(false);
-  const [openJoinChatroomModal, setOpenJoinChatroomModal] = useState(false);
+  const [openModal, setOpenModal] = useState(null);
   const { chatrooms } = useAPI();
   const { selectChatroom } = useChatroom();
-
-  const closeCreateModal = () => {
-    setOpenCreateChatroomModal(false);
-  };
-  const closeJoinModal = () => {
-    setOpenJoinChatroomModal(false);
-  };
 
   return (
     <nav style={{ width: '250px' }} className="d-flex flex-column border justify-content-end">
@@ -42,23 +33,17 @@ const Sidebar = () => {
             })}
         </ListGroup>
       </section>
-      <Button
-        className="p-2 border-top rounded-0"
-        onClick={() => setOpenJoinChatroomModal(true)}
-      >
+      <Button className="p-2 border-top rounded-0" onClick={() => setOpenModal('Join')}>
         Join chatroom
       </Button>
-      <Button
-        className="p-2 border-top rounded-0"
-        onClick={() => setOpenCreateChatroomModal(true)}
-      >
-        New chatroom
+      <Button className="p-2 border-top rounded-0" onClick={() => setOpenModal('Create')}>
+        Create chatroom
       </Button>
-      <Modal show={openJoinChatroomModal} onHide={closeJoinModal}>
-        <JoinChatroomModal closeModal={closeJoinModal} />
-      </Modal>
-      <Modal show={openCreateChatroomModal} onHide={closeCreateModal}>
-        <CreateChatroomModal closeModal={closeCreateModal} />
+      <Modal
+        show={openModal === 'Create' || openModal === 'Join'}
+        onHide={() => setOpenModal(false)}
+      >
+        <ChatroomModal openModal={openModal} setOpenModal={setOpenModal} />
       </Modal>
       <Button variant="outline" className="p-2 border-top rounded-0">
         Logout

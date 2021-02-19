@@ -17,8 +17,8 @@ const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (!token) return null;
-    // Make request to server and pass in id for the request. In this case the sender of a message in the chat.
 
+    // Make request to server and pass in id for the request. In this case the stored user token in localStorage.
     const newSocket = io('http://localhost:8000', {
       query: {
         token,
@@ -44,10 +44,5 @@ const SocketProvider = ({ children }) => {
 export { SocketProvider, useSocket };
 
 SocketProvider.propTypes = {
-  // token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 };
-
-// SocketProvider.defaultProps = {
-//   token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-// };
