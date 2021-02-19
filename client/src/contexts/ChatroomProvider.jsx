@@ -13,11 +13,12 @@ const useChatroom = () => {
 };
 
 const ChatroomProvider = ({ children }) => {
-  const { chatrooms } = useAPI();
+  const { chatrooms, messages, setMessages } = useAPI();
   const [selectedChatroom, setSelectedChatroom] = useState(chatrooms[0]);
+  const [filteredMessages, setFilteredMessages] = useState(messages);
   const socket = useSocket();
-  const token = localStorage.getItem('CHAT_Token');
 
+  // Select a chatroom to display given a chatroom ID (from dashboard/sidebar).
   const selectChatroom = (chatroomId) => {
     const chatroom = chatrooms.filter((room) => {
       return chatroomId === room._id;
@@ -33,12 +34,17 @@ const ChatroomProvider = ({ children }) => {
     setSelectedChatroom([...chatroom]);
   };
 
-  useEffect(() => {
-    if (chatrooms.length) selectChatroom(chatrooms[0]._id);
-  }, [chatrooms]);
+  // Filter messages to display given a chatroom ID (from dashboard/sidebar).
+  const filterMessages = (chatroomId) => {
+    const filtered = messages.filter((message) => {
+      return message.chatroom === chatroomId;
+    });
+    return setFilteredMessages([...filtered]);
+  };
 
-  const addMessageToChatroom = ({ userToken, chatroom, text }) => {
-    console.log({ userToken, chatroom, text });
+  const addMessageToChatroom = ({ chatroom, sender, message }) => {
+    setMessages([...messages, { chatroom, sender, message }]);
+    // console.log({ chatroom, sender, message });
   };
 
   useEffect(() => {
@@ -47,17 +53,20 @@ const ChatroomProvider = ({ children }) => {
     socket.on('receive-message', addMessageToChatroom);
 
     return () => socket.off('receive-message', addMessageToChatroom);
-  }, []);
+  }, [socket, addMessageToChatroom]);
 
-  const sendMessage = (chatroom, text) => {
-    socket.emit('send-message', { token, chatroom, text });
-    addMessageToChatroom({ token, chatroom, text });
+  const sendMessage = (text) => {
+    socket.emit('send-message', { chatroomId: selectedChatroom[0]._id, message: text });
+    // addMessageToChatroom({ chatroom: selectedChatroom[0]._id, sender: token, message: text });
   };
 
   const value = {
     selectedChatroom,
     selectChatroom,
     sendMessage,
+    messages,
+    filterMessages,
+    filteredMessages,
   };
   return <ChatroomContext.Provider value={value}>{children}</ChatroomContext.Provider>;
 };
@@ -66,7 +75,7 @@ export { ChatroomProvider, useChatroom };
 
 ChatroomProvider.propTypes = {
   // token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  children: Object(PropTypes.array).isRequired,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 };
 
 // ChatroomProvider.defaultProps = {

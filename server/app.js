@@ -11,6 +11,7 @@ app.use(cors());
 // Bring in the routes
 app.use('/user', require('./routes/user.js'));
 app.use('/chatroom', require('./routes/chatroom.js'));
+app.use('/message', require('./routes/message.js'));
 
 // Setup error handlers
 app.use(errorHandlers.notFound);

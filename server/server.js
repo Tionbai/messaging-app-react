@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Bring in all the models
 const Chatroom = require('./models/Chatroom.js');
 const User = require('./models/User.js');
-const Messages = require('./models/Messages.js');
+const Message = require('./models/Message.js');
 const app = require('./app.js');
 const socket = require('socket.io');
 const jwt = require('jsonwebtoken');
@@ -19,7 +19,7 @@ const io = socket(server, {
   },
 });
 
-io.use((socket, next) => {
+io.use(async (socket, next) => {
   try {
     const token = socket.handshake.query.token;
     const payload = jwt.verify(token, process.env.SECRET);
@@ -39,19 +39,18 @@ io.on('connection', (socket) => {
 
   socket.on('send-message', async ({ chatroomId, message }) => {
     if (message.trim().length > 0) {
-      const user = await User.findOne({ id: socket.userId });
-      const message = new Message({
+      const user = await User.findOne({ _id: socket.userId });
+      const newMessage = new Message({
         chatroom: chatroomId,
-        user: socket.userId,
+        sender: user._id,
         message: message,
       });
-      io.to(chatroomId).emit('receive-message', {
-        message,
-        username: user.username,
-        userId: socket.userId,
+      await newMessage.save();
+      socket.emit('receive-message', {
+        chatroom: chatroomId,
+        sender: user._id,
+        message: message,
       });
-
-      await message.save();
     }
   });
 });
@@ -67,40 +66,9 @@ mongoose.connection.on('error', (err) => {
   console.log('Mongoose connection error: ' + err.message);
 });
 
-mongoose.connection.once('open', () => {
+mongoose.connection.once('open', async () => {
   console.log('MongoDB connected.');
+
+  // const message = await Message.find({ chatroom: '602c00106d051637a82fa497' });
+  // console.log(message);
 });
-
-// const io = socket(5000, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST'],
-//   },
-// });
-
-// io.on('connection', (socket) => {
-//   const { username } = socket.handshake.query;
-//   socket.join(username);
-
-// Message.find().then((result) => {
-//   socket.emit('output-messages', result);
-// });
-
-// socket.on('send-message', ({ recipients, text }) => {
-//   recipients.forEach((recipient) => {
-//     const newRecipients = recipients.filter((r) => r !== recipient);
-//     newRecipients.push(username);
-//     socket.broadcast.to(recipient).emit('receive-message', {
-//       recipients: newRecipients,
-//       sender: username,
-//       text,
-//     });
-//   });
-// const message = new Message({
-//   recipients: recipients,
-//   sender: username,
-//   text: text,
-// });
-// message.save();
-//   });
-// });

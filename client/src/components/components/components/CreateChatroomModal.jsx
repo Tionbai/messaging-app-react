@@ -41,3 +41,5 @@ CreateChatroomModal.propTypes = {
 };
 
 export default CreateChatroomModal;
+
+// TODO: usersRef should be array of users. Make form control accept multi-inputs of user ids or usernames

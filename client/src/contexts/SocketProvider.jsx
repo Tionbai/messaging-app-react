@@ -45,7 +45,7 @@ export { SocketProvider, useSocket };
 
 SocketProvider.propTypes = {
   // token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  children: Object(PropTypes.array).isRequired,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 };
 
 // SocketProvider.defaultProps = {

@@ -6,14 +6,14 @@ const messageSchema = new mongoose.Schema({
     required: 'Chatroom is required.',
     ref: 'Chatroom',
   },
-  user: {
+  sender: {
     type: mongoose.Schema.Types.ObjectID,
-    required: 'User is required.',
+    required: 'Sender is required.',
     ref: 'User',
   },
-  text: {
+  message: {
     type: String,
-    required: 'Text is required.',
+    required: 'Message is required.',
   },
   created: {
     type: Date,
@@ -21,6 +21,6 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
-const Message = mongoose.model('Messages', messageSchema);
+const Message = mongoose.model('Message', messageSchema);
 
 module.exports = Message;

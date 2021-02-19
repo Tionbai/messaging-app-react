@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
-import { Form, InputGroup, Button } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { Form, InputGroup, ListGroup, Button } from 'react-bootstrap';
 import { useChatroom } from '../../../contexts/ChatroomProvider';
 
 const Chatroom = () => {
   const [text, setText] = useState('');
-  const { sendMessage } = useChatroom();
+  const { sendMessage, selectedChatroom, filteredMessages } = useChatroom();
+  const lastMessageRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    sendMessage();
+    sendMessage(text);
     setText('');
   };
+
+  // When new message is sent, scroll down to last message.
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ smooth: true });
+    }
+  }, [lastMessageRef, filteredMessages]);
 
   // Display and format conversation based on sender and recipient.
   return (
     <section className="d-flex flex-column flex-grow-1">
-      <section className="m-2 flex-grow-1">Chatroom section</section>
+      <section className="m-2 flex-grow-1 overflow-auto">
+        <h2>{selectedChatroom[0].name}</h2>
+        <p>{selectedChatroom[0]._id}</p>
+        <ListGroup className="d-flex flex-column">
+          {filteredMessages.map((message, index) => {
+            const lastMessage = filteredMessages.length - 1 === index;
+            return (
+              <ListGroup.Item
+                className="my-1 border"
+                key={message._id}
+                ref={lastMessage ? lastMessageRef : null}
+              >
+                {message.message}
+              </ListGroup.Item>
+            );
+          })}
+        </ListGroup>
+      </section>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="m-2">
           <InputGroup>

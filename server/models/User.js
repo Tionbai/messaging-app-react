@@ -14,6 +14,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: 'Password is required.',
     },
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectID,
+      },
+    ],
   },
   {
     timestamps: true,

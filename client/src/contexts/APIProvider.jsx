@@ -13,8 +13,10 @@ const useAPI = () => {
 const APIProvider = ({ children }) => {
   const [apiResponseMessage, setApiResponseMessage] = useState('');
   const [chatrooms, setChatrooms] = useState([]);
-  const token = localStorage.getItem('CHAT_Token');
+  const [messages, setMessages] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('CHAT_Token'));
 
+  // Return specific error message based on given type parameter.
   const typeError = (type) => {
     if (apiResponseMessage.length) {
       const error = apiResponseMessage.find((message) => {
@@ -25,6 +27,7 @@ const APIProvider = ({ children }) => {
     return false;
   };
 
+  // Register user and redirect user to login page.
   const registerUser = async (username, email, password) => {
     try {
       const response = await axios.post('/user/register', {
@@ -39,6 +42,7 @@ const APIProvider = ({ children }) => {
     }
   };
 
+  // Login user, set token and redirect user to dashboard page.
   const loginUser = async (username, password) => {
     try {
       const response = await axios.post('/user/login', {
@@ -53,6 +57,12 @@ const APIProvider = ({ children }) => {
     }
   };
 
+  // Get token after user logs in.
+  useEffect(() => {
+    setToken(localStorage.getItem('CHAT_Token'));
+  }, [loginUser]);
+
+  // Get all chatrooms.
   const getChatrooms = async () => {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -65,6 +75,20 @@ const APIProvider = ({ children }) => {
     }
   };
 
+  // Get all messages.
+  const getMessages = async () => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.get('/message', { headers });
+      return setMessages([...response.data]);
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Create new chatroom.
   const createChatroom = async (chatroom, users) => {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -80,7 +104,7 @@ const APIProvider = ({ children }) => {
           headers,
         },
       );
-      setChatrooms(getChatrooms());
+      setChatrooms([...getChatrooms()]);
       return response.data;
     } catch (err) {
       return err.response;
@@ -91,7 +115,12 @@ const APIProvider = ({ children }) => {
     getChatrooms();
   }, []);
 
+  useEffect(() => {
+    getMessages();
+  }, [chatrooms]);
+
   const value = {
+    token,
     apiResponseMessage,
     typeError,
     registerUser,
@@ -100,7 +129,9 @@ const APIProvider = ({ children }) => {
     createChatroom,
     chatrooms,
     setChatrooms,
-    token,
+    messages,
+    setMessages,
+    getMessages,
   };
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
