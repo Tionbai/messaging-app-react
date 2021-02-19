@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
+import { useChatroom } from '../../../contexts/ChatroomProvider';
 
 const Chatroom = () => {
   const [text, setText] = useState('');
+  const { sendMessage } = useChatroom();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    sendMessage();
+    setText('');
+  };
 
   // Display and format conversation based on sender and recipient.
   return (
     <section className="d-flex flex-column flex-grow-1">
       <section className="m-2 flex-grow-1">Chatroom section</section>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="m-2">
           <InputGroup>
             <Form.Control

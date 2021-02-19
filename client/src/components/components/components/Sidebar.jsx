@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { ListGroup, Button, Modal } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../contexts/APIProvider';
+import { useChatroom } from '../../../contexts/ChatroomProvider';
 import CreateChatroomModal from './CreateChatroomModal';
 
 const Sidebar = () => {
   const [openCreateChatroomModal, setOpenCreateChatroomModal] = useState(false);
   const { chatrooms } = useAPI();
+  const { selectChatroom } = useChatroom();
 
   const closeModal = () => {
     setOpenCreateChatroomModal(false);
@@ -16,16 +18,24 @@ const Sidebar = () => {
     <nav style={{ width: '250px' }} className="d-flex flex-column border justify-content-end">
       <section className="d-flex flex-column flex-grow-1">
         <h3 className="mx-auto">Chatrooms</h3>
-        {chatrooms &&
-          chatrooms.length &&
-          chatrooms.map((chatroom) => {
-            return (
-              <div className="p-2 border-top border-bottom" key={uuidv4()}>
-                Room:
-                {` ${chatroom.name}`}
-              </div>
-            );
-          })}
+        <ListGroup>
+          {chatrooms &&
+            chatrooms.length &&
+            chatrooms.map((chatroom) => {
+              return (
+                <ListGroup.Item
+                  className="p-2 border-right-0"
+                  key={uuidv4()}
+                  action
+                  active={chatroom.selected}
+                  onClick={() => selectChatroom(chatroom._id)}
+                >
+                  Room:
+                  {` ${chatroom.name}`}
+                </ListGroup.Item>
+              );
+            })}
+        </ListGroup>
       </section>
       <Button
         className="p-2 border-top rounded-0"

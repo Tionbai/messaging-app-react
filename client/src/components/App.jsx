@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import Index from './components/Index';
 import { SocketProvider } from '../contexts/SocketProvider';
 import { APIProvider } from '../contexts/APIProvider';
+import { ChatroomProvider } from '../contexts/ChatroomProvider';
 
 const App = () => {
   const token = localStorage.getItem('CHAT_Token');
@@ -14,28 +15,30 @@ const App = () => {
 
   return (
     <APIProvider>
-      <Switch>
-        <SocketProvider token={token}>
-          <Route exact path="/" component={Index} />
-          <Route exact path="/register" component={Register} />
-          <Route
-            exact
-            path="/login"
-            render={(props) => (
-              /* eslint-disable-next-line react/jsx-props-no-spreading */
-              <Login {...props} token={token} />
-            )}
-          />
-          <Route
-            exact
-            path="/dashboard"
-            render={(props) => (
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              <Dashboard {...props} token={token} />
-            )}
-          />
-        </SocketProvider>
-      </Switch>
+      <SocketProvider token={token}>
+        <ChatroomProvider>
+          <Switch>
+            <Route exact path="/" component={Index} />
+            <Route exact path="/register" component={Register} />
+            <Route
+              exact
+              path="/login"
+              render={(props) => (
+                /* eslint-disable-next-line react/jsx-props-no-spreading */
+                <Login {...props} token={token} />
+              )}
+            />
+            <Route
+              exact
+              path="/dashboard"
+              render={(props) => (
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                <Dashboard {...props} token={token} />
+              )}
+            />
+          </Switch>
+        </ChatroomProvider>
+      </SocketProvider>
     </APIProvider>
   );
 };
