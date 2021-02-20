@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { ListGroup, Button, Modal } from 'react-bootstrap';
+import React from 'react';
+import { ListGroup, Button } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../contexts/APIProvider';
 import { useChatroom } from '../../../contexts/ChatroomProvider';
-import ChatroomModal from './ChatroomModal';
+import SidebarOptions from './components/SidebarOptions';
 
 const Sidebar = () => {
-  const [openModal, setOpenModal] = useState(null);
   const { setToken, chatrooms } = useAPI();
   const { selectChatroom } = useChatroom();
 
@@ -38,18 +37,7 @@ const Sidebar = () => {
             })}
         </ListGroup>
       </section>
-      <Button className="p-2 border-top rounded-0" onClick={() => setOpenModal('Join')}>
-        Join chatroom
-      </Button>
-      <Button className="p-2 border-top rounded-0" onClick={() => setOpenModal('Create')}>
-        Create chatroom
-      </Button>
-      <Modal
-        show={openModal === 'Create' || openModal === 'Join'}
-        onHide={() => setOpenModal(false)}
-      >
-        <ChatroomModal openModal={openModal} setOpenModal={setOpenModal} />
-      </Modal>
+      <SidebarOptions />
       <Button variant="outline" className="p-2 border-top rounded-0" onClick={handleLogout}>
         Logout
       </Button>
