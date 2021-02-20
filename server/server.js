@@ -59,18 +59,17 @@ io.on('connection', (socket) => {
       });
       await newMessage.save();
 
-      // TODO: Start updating database when database is cleared and app is ready for prototype.
-      const updateChatroom = async (chatroomId, userId, messageId) => {
+      const updateDatabaseOnNewMessage = async (chatroomId, userId, messageId) => {
         const chatroom = await Chatroom.findOne({ _id: chatroomId });
         const user = await User.findOne({ _id: userId });
-
+        
         await chatroom.messages.push(messageId);
         await user.messages.push(messageId);
-
+        
         await chatroom.save();
         await user.save();
       };
-      // await updateChatroom(chatroomId, user._id, newMessage._id);
+      await updateDatabaseOnNewMessage(chatroomId, user._id, newMessage._id);
     }
   });
 });

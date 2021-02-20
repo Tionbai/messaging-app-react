@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
+import { useAPI } from './APIProvider';
 
 // Handle socket.io between client and server.
 
@@ -12,7 +13,7 @@ const useSocket = () => {
 };
 
 const SocketProvider = ({ children }) => {
-  const token = localStorage.getItem('CHAT_Token');
+  const { token } = useAPI();
   const [socket, setSocket] = useState();
 
   useEffect(() => {

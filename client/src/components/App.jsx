@@ -10,32 +10,15 @@ import { APIProvider } from '../contexts/APIProvider';
 import { ChatroomProvider } from '../contexts/ChatroomProvider';
 
 const App = () => {
-  const token = localStorage.getItem('CHAT_Token');
-  // Pass user's username down throughout application.
-
   return (
     <APIProvider>
-      <SocketProvider token={token}>
+      <SocketProvider>
         <ChatroomProvider>
           <Switch>
             <Route exact path="/" component={Index} />
             <Route exact path="/register" component={Register} />
-            <Route
-              exact
-              path="/login"
-              render={(props) => (
-                /* eslint-disable-next-line react/jsx-props-no-spreading */
-                <Login {...props} token={token} />
-              )}
-            />
-            <Route
-              exact
-              path="/dashboard"
-              render={(props) => (
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                <Dashboard {...props} token={token} />
-              )}
-            />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/dashboard" component={Dashboard} />
           </Switch>
         </ChatroomProvider>
       </SocketProvider>

@@ -8,3 +8,20 @@
   height: 100%;
   width: 100%;
 }
+
+.apiResponse {
+  position: fixed;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  animation: fadeOut 2s ease;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

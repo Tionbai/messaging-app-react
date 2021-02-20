@@ -11,10 +11,18 @@ const useAPI = () => {
 };
 
 const APIProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem('CHAT_Token'));
   const [apiResponseMessage, setApiResponseMessage] = useState('');
   const [chatrooms, setChatrooms] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('CHAT_Token'));
+
+  // Set and remove API response message after a short time.
+  const setApiResponseMessageFunc = (value) => {
+    setApiResponseMessage(value);
+    setTimeout(() => {
+      setApiResponseMessage('');
+    }, 5000);
+  };
 
   // Return specific error message based on given type parameter.
   const typeError = (type) => {
@@ -36,9 +44,9 @@ const APIProvider = ({ children }) => {
         password,
       });
       history.push('/login');
-      return setApiResponseMessage(response.data);
+      return setApiResponseMessageFunc(response.data);
     } catch (err) {
-      return setApiResponseMessage(err.response.data);
+      return setApiResponseMessageFunc(err.response.data);
     }
   };
 
@@ -51,9 +59,9 @@ const APIProvider = ({ children }) => {
       });
       history.push('/dashboard');
       localStorage.setItem('CHAT_Token', response.data.token);
-      return setApiResponseMessage({ type: 'success', message: response.data.message });
+      return setApiResponseMessageFunc({ type: 'success', message: response.data.message });
     } catch (err) {
-      return setApiResponseMessage({ type: 'error', message: err.response.data.message });
+      return setApiResponseMessageFunc({ type: 'error', message: err.response.data.message });
     }
   };
 
@@ -62,9 +70,7 @@ const APIProvider = ({ children }) => {
     setToken(localStorage.getItem('CHAT_Token'));
   }, [loginUser]);
 
-  // TODO: User should only get chatrooms they are involved with.
-
-  // Get all chatrooms.
+  // Get all chatrooms user is added to.
   const getChatrooms = async () => {
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -86,6 +92,7 @@ const APIProvider = ({ children }) => {
       const response = await axios.get('/message', { headers });
       return setMessages([...response.data]);
     } catch (err) {
+      console.log(err.response);
       return err.response;
     }
   };
@@ -147,6 +154,7 @@ const APIProvider = ({ children }) => {
 
   const value = {
     token,
+    setToken,
     apiResponseMessage,
     typeError,
     registerUser,

@@ -7,8 +7,14 @@ import ChatroomModal from './ChatroomModal';
 
 const Sidebar = () => {
   const [openModal, setOpenModal] = useState(null);
-  const { chatrooms } = useAPI();
+  const { setToken, chatrooms } = useAPI();
   const { selectChatroom } = useChatroom();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('CHAT_Token');
+    setToken(null);
+  };
 
   return (
     <nav style={{ width: '250px' }} className="d-flex flex-column border justify-content-end">
@@ -16,7 +22,6 @@ const Sidebar = () => {
         <h3 className="mx-auto">Chatrooms</h3>
         <ListGroup>
           {chatrooms &&
-            chatrooms.length &&
             chatrooms.map((chatroom) => {
               return (
                 <ListGroup.Item
@@ -45,7 +50,7 @@ const Sidebar = () => {
       >
         <ChatroomModal openModal={openModal} setOpenModal={setOpenModal} />
       </Modal>
-      <Button variant="outline" className="p-2 border-top rounded-0">
+      <Button variant="outline" className="p-2 border-top rounded-0" onClick={handleLogout}>
         Logout
       </Button>
     </nav>

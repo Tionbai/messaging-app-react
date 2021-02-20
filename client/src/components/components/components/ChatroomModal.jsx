@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useAPI } from '../../../contexts/APIProvider';
 
-// 'openModal' is passed in as a string.
+// openModal is passed in as a string.
 const ChatroomModal = (props) => {
   const { openModal, setOpenModal } = props;
   const chatroomNameRef = useRef();
@@ -34,8 +34,12 @@ const ChatroomModal = (props) => {
 };
 
 ChatroomModal.propTypes = {
-  openModal: PropTypes.string.isRequired,
+  openModal: PropTypes.string,
   setOpenModal: PropTypes.func.isRequired,
+};
+
+ChatroomModal.defaultProps = {
+  openModal: PropTypes.string,
 };
 
 export default ChatroomModal;

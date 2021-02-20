@@ -4,10 +4,15 @@ import Sidebar from './components/Sidebar';
 import Chatroom from './components/Chatroom';
 import { useAPI } from '../../contexts/APIProvider';
 import { useChatroom } from '../../contexts/ChatroomProvider';
+import history from '../../history';
 
 const Dashboard = () => {
-  const { chatrooms, messages } = useAPI();
+  const { token, chatrooms, messages } = useAPI();
   const { selectChatroom, selectedChatroom, filterMessages } = useChatroom();
+
+  useEffect(() => {
+    if (!token) history.push('/login');
+  }, [token]);
 
   // Select first chatroom in the list on initial render.
   useEffect(() => {

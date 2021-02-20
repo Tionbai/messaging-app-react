@@ -66,16 +66,12 @@ const ChatroomProvider = ({ children }) => {
     filterMessages,
     filteredMessages,
   };
+
   return <ChatroomContext.Provider value={value}>{children}</ChatroomContext.Provider>;
 };
 
 export { ChatroomProvider, useChatroom };
 
 ChatroomProvider.propTypes = {
-  // token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 };
-
-// ChatroomProvider.defaultProps = {
-//   token: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-// };

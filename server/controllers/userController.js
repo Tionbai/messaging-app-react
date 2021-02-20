@@ -4,6 +4,7 @@ const User = mongoose.model('User');
 const sha256 = require('js-sha256');
 const jwt = require('jsonwebtoken');
 
+// Create array of error messages based on error(s).   
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -71,8 +72,7 @@ exports.login = async (req, res) => {
     username,
   });
 
-  if (!usernameExists)
-    throw `Username ${username} does not exist.`;
+  if (!usernameExists) throw `Username ${username} does not exist.`;
 
   const user = await User.findOne({
     username,

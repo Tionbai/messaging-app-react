@@ -15,6 +15,14 @@ const Chatroom = () => {
     setText('');
   };
 
+  // Handle user pressing enter to send message (need for 'textarea').
+  const handleShiftEnter = (e) => {
+    if (e.key === 'Enter' && e.shiftKey === false) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
   // When new message is sent, scroll down to last message.
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -52,6 +60,7 @@ const Chatroom = () => {
               value={text}
               onChange={(e) => setText(e.target.value)}
               style={{ height: '75px', resize: 'none' }}
+              onKeyDown={handleShiftEnter}
             />
             <InputGroup.Append>
               <Button type="submit">Send</Button>
