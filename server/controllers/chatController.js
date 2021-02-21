@@ -66,12 +66,15 @@ exports.joinChat = async (req, res) => {
   const chatWithUser = await Chat.findOne({ name: name }).and({
     users: { $in: userId },
   });
-  if (chatWithUser.length) throw 'You are already added to this chat.';
+
+  if (chatWithUser) throw 'You are already added to this chat.';
 
   // Add user to chat and save in database.
-  await chatWithUser.users.push(userId);
+  const chat = await Chat.findOne({ name: name });
+  await chat.users.push(userId);
+  await chat.save();
 
-  res.json(chatWithUser);
+  res.json(chat);
 };
 
 // Delete existing chat.

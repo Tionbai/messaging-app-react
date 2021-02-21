@@ -11,7 +11,7 @@ const SidebarOptions = () => {
     newChat: {
       headerString: 'New Chat',
       labelString: 'Chat name',
-      buttonString: 'New',
+      buttonString: 'Create',
       submitFunc: newChat,
     },
     joinChat: {
@@ -29,7 +29,7 @@ const SidebarOptions = () => {
     newContact: {
       headerString: 'New contact',
       labelString: 'Contact username or email',
-      buttonString: 'New',
+      buttonString: 'Add',
       submitFunc: newContact,
     },
   };
@@ -56,7 +56,7 @@ const SidebarOptions = () => {
       </Button>
       <Button
         className="p-2 border-top rounded-0"
-        onClick={() => setActiveModal(modalOptions.addContact)}
+        onClick={() => setActiveModal(modalOptions.newContact)}
       >
         New contact
       </Button>

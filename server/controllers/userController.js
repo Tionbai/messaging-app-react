@@ -119,6 +119,10 @@ exports.newContact = async (req, res) => {
 
   if (!userExists) throw 'User does not exist.';
 
+  const theUserIsYou = userId.toString() === userExists._id.toString();
+
+  if (theUserIsYou) throw 'You cannot add yourself to contacts.';
+
   const userAlreadyInContacts = await User.find(user).and({
     contacts: { $in: userExists._id },
   });
@@ -126,16 +130,9 @@ exports.newContact = async (req, res) => {
   if (userAlreadyInContacts.length)
     throw 'The user is already in your contacts.';
 
-  const theUserIsYou = userId.toString() === user._id.toString();
-
-  if (theUserIsYou) throw 'You cannot add yourself to contacts.';
-
   // Save user to contacts and save in database.
   await user.contacts.push(userExists._id);
   await user.save();
 
-  res.json({
-    data: userExists,
-    message: `${userExists.username} is added to your contacts.`,
-  });
+  res.json(userExists);
 };
