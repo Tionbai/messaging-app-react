@@ -14,6 +14,7 @@ const APIProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('CHAT_Token'));
   const [apiResponseMessage, setApiResponseMessage] = useState('');
   const [chatrooms, setChatrooms] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [messages, setMessages] = useState([]);
 
   // Set and remove API response message after a short time.
@@ -70,6 +71,47 @@ const APIProvider = ({ children }) => {
     setToken(localStorage.getItem('CHAT_Token'));
   }, [loginUser]);
 
+  // Add new contact given a contact ref (username or email).
+  const getContacts = async () => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.get('/user/getcontacts', {
+        headers,
+      });
+      setContacts([...response.data]);
+      return response.data;
+    } catch (err) {
+      console.log(err.reponse);
+      return err.response;
+    }
+  };
+
+  // Add new contact given a contact ref (username or email).
+  const addContact = async (contactRef) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.post(
+        '/user/addcontact',
+        {
+          ref: contactRef,
+        },
+        {
+          headers,
+        },
+      );
+      console.log(response.data);
+      setContacts([...contacts, response.data.data]);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
   // Get all chatrooms user is added to.
   const getChatrooms = async () => {
     const headers = {
@@ -112,11 +154,35 @@ const APIProvider = ({ children }) => {
           headers,
         },
       );
-      setChatrooms([...getChatrooms()]);
+      setChatrooms([...chatrooms, response.data.chatroom]);
       console.log(response.data);
       return response.data;
     } catch (err) {
-      console.log(err.reponse);
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Delete chatroom.
+  const deleteChatroom = async (chatroomName) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.delete(
+        '/chatroom',
+        {
+          name: chatroomName,
+        },
+        {
+          headers,
+        },
+      );
+      setChatrooms([...chatrooms.filter((chatroom) => chatroom.name !== chatroomName)]);
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
       return err.response;
     }
   };
@@ -137,15 +203,17 @@ const APIProvider = ({ children }) => {
         },
       );
       console.log(response.data);
+      setChatrooms([...chatrooms, response.data.chatroom]);
       return response.data;
     } catch (err) {
-      console.log(err.reponse);
+      console.log(err.response);
       return err.response;
     }
   };
 
   useEffect(() => {
     getChatrooms();
+    getContacts();
   }, []);
 
   useEffect(() => {
@@ -167,6 +235,9 @@ const APIProvider = ({ children }) => {
     messages,
     setMessages,
     getMessages,
+    addContact,
+    contacts,
+    deleteChatroom,
   };
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;

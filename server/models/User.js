@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: 'Password is required.',
     },
+    contacts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     chatrooms: [
       {
         type: mongoose.Schema.Types.ObjectId,

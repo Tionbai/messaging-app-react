@@ -1,13 +1,16 @@
-import React from 'react';
-import { ListGroup, Button } from 'react-bootstrap';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from 'react';
+import { Tabs, Tab, Button } from 'react-bootstrap';
 import { useAPI } from '../../../contexts/APIProvider';
-import { useChatroom } from '../../../contexts/ChatroomProvider';
 import SidebarOptions from './components/SidebarOptions';
+import SidebarChatrooms from './components/SidebarChatrooms';
+import SidebarContacts from './components/SidebarContacts';
+
+const chatroomsKey = 'chatrooms';
+const contactsKey = 'contacts';
 
 const Sidebar = () => {
-  const { setToken, chatrooms } = useAPI();
-  const { selectChatroom } = useChatroom();
+  const [key, setKey] = useState(chatroomsKey);
+  const { setToken } = useAPI();
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -18,24 +21,14 @@ const Sidebar = () => {
   return (
     <nav style={{ width: '250px' }} className="d-flex flex-column border justify-content-end">
       <section className="d-flex flex-column flex-grow-1">
-        <h3 className="mx-auto">Chatrooms</h3>
-        <ListGroup>
-          {chatrooms &&
-            chatrooms.map((chatroom) => {
-              return (
-                <ListGroup.Item
-                  className="p-2 border-right-0"
-                  key={uuidv4()}
-                  action
-                  active={chatroom.selected}
-                  onClick={() => selectChatroom(chatroom._id)}
-                >
-                  Room:
-                  {` ${chatroom.name}`}
-                </ListGroup.Item>
-              );
-            })}
-        </ListGroup>
+        <Tabs activeKey={key} onSelect={(k) => setKey(k)}>
+          <Tab eventKey={chatroomsKey} title="Chatrooms">
+            <SidebarChatrooms />
+          </Tab>
+          <Tab eventKey={contactsKey} title="Contacts">
+            <SidebarContacts />
+          </Tab>
+        </Tabs>
       </section>
       <SidebarOptions />
       <Button variant="outline" className="p-2 border-top rounded-0" onClick={handleLogout}>

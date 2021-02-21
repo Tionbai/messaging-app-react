@@ -9,8 +9,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Bring in the routes
-app.use('/user', require('./routes/user.js'));
 app.use('/chatroom', require('./routes/chatroom.js'));
+app.use('/user', require('./routes/user.js'));
 app.use('/message', require('./routes/message.js'));
 
 // Setup error handlers

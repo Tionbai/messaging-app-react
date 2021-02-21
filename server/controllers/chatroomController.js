@@ -19,7 +19,7 @@ exports.createChatroom = async (req, res) => {
 
   if (!name) throw 'Chatroom name must be provided.';
 
-  const nameRegex = /^[A-Za-z\s]+$/;
+  const nameRegex = /^[a-zA-Z\s]*$/;
 
   if (!nameRegex.test(name))
     throw 'Chatroom name can only contain alphabetical letters.';
@@ -32,31 +32,37 @@ exports.createChatroom = async (req, res) => {
 
   const chatroom = new Chatroom({
     name,
+    users: userExists._id,
   });
 
-  // Add user to chatroom and save in database.
-  await chatroom.users.push(user._id);
   await chatroom.save();
+
   // Add chatroom to user and save in database.
   await userExists.chatrooms.push(chatroom._id);
-  user.save();
+  await userExists.save();
 
   res.json({
+    chatroom,
     message: `Chatroom created by ${userExists.username}.`,
   });
 };
-
 
 // Join existing chatroom.
 exports.joinChatroom = async (req, res) => {
   const { name } = req.body;
   const userId = req.payload;
 
-  const chatroom = await Chatroom.findOne({ name: name });
+  const chatroom = await Chatroom.findOne({ name });
   const user = await User.findOne({ _id: userId });
 
   if (!chatroom) throw 'Chatroom does not exist.';
   if (!user) throw 'User does not exist.';
+
+  const userAlreadyInChatroom = await Chatroom.find(chatroom).and({
+    users: { $in: user._id },
+  });
+
+  if (userAlreadyInChatroom) throw 'You are already added to this chatroom';
 
   // Add user to chatroom and save in database.
   await chatroom.users.push(user._id);

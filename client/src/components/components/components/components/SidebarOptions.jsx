@@ -5,7 +5,7 @@ import ModalTemplate from './ModalTemplate';
 
 const SidebarOptions = () => {
   const [activeModal, setActiveModal] = useState(false);
-  const { createChatroom, joinChatroom, addContact } = useAPI();
+  const { createChatroom, joinChatroom, deleteChatroom, addContact } = useAPI();
 
   const modalOptions = {
     createChatroom: {
@@ -19,6 +19,12 @@ const SidebarOptions = () => {
       labelString: 'Chatroom name',
       buttonString: 'Join',
       submitFunc: joinChatroom,
+    },
+    deleteChatroom: {
+      headerString: 'Delete chatroom',
+      labelString: 'Chatroom name',
+      buttonString: 'Delete',
+      submitFunc: deleteChatroom,
     },
     addContact: {
       headerString: 'Add contact',
@@ -41,6 +47,12 @@ const SidebarOptions = () => {
         onClick={() => setActiveModal(modalOptions.createChatroom)}
       >
         Create chatroom
+      </Button>
+      <Button
+        className="p-2 border-top rounded-0"
+        onClick={() => setActiveModal(modalOptions.deleteChatroom)}
+      >
+        Delete chatroom
       </Button>
       <Button
         className="p-2 border-top rounded-0"

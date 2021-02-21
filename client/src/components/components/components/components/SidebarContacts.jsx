@@ -1,9 +1,10 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { useContacts } from '../../../../contexts/ContactsProvider';
+import { useAPI } from '../../../../contexts/APIProvider';
 
 const Contacts = () => {
-  const { contacts } = useContacts();
+  const { contacts } = useAPI();
+
   return (
     <ListGroup variant="flush">
       {contacts.map((contact) => (

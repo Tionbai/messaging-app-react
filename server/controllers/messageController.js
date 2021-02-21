@@ -27,6 +27,7 @@ exports.createMessage = async (req, res) => {
   await newMessage.save();
 
   res.json({
+    data: newMessage,
     message: 'Message created.',
   });
 };

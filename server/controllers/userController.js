@@ -4,7 +4,7 @@ const User = mongoose.model('User');
 const sha256 = require('js-sha256');
 const jwt = require('jsonwebtoken');
 
-// Create array of error messages based on error(s).   
+// Create array of error messages based on error(s).
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -87,5 +87,55 @@ exports.login = async (req, res) => {
   res.json({
     message: 'User logged in successfully.',
     token,
+  });
+};
+
+// Ref in req.body is either username or email
+exports.getContacts = async (req, res) => {
+  const userId = req.payload;
+
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) throw 'Only a registered user can have contacts.';
+
+  // Populate user contacts and return contacts.
+  await user.execPopulate('contacts').then((data) => res.json(data.contacts));
+};
+
+// Ref in req.body is either username or email
+exports.addContact = async (req, res) => {
+  const userId = req.payload;
+  const { ref } = req.body;
+
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) throw 'Only a registered user can add contacts.';
+
+  // Find user in database by either username or email.
+  const userExists = await User.findOne().or([
+    { username: ref },
+    { email: ref },
+  ]);
+
+  if (!userExists) throw 'User does not exist.';
+
+  const userAlreadyInContacts = await User.find(user).and({
+    contacts: { $in: userExists._id },
+  });
+
+  if (userAlreadyInContacts.length)
+    throw 'The user is already in your contacts.';
+
+  const theUserIsYou = userId.toString() === user._id.toString();
+
+  if (theUserIsYou) throw 'You cannot add yourself to contacts.';
+
+  // Save user to contacts and save in database.
+  await user.contacts.push(userExists._id);
+  await user.save();
+
+  res.json({
+    data: userExists,
+    message: `${userExists.username} is added to your contacts.`,
   });
 };
