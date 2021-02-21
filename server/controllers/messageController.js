@@ -4,29 +4,16 @@ const Chat = mongoose.model('Chat');
 const User = mongoose.model('User');
 const Message = mongoose.model('Message');
 
-const checkIfChatExistsInDatabase = async (chatId) => {
-  const chatExists = await Chat.findOne({ _id: chatId });
-
-  if (chatExists) return true;
-  else return false;
-};
-
-const checkIfUserExistsInDatabase = async (userId) => {
-  const userExists = await User.findOne({ _id: userId });
-
-  if (userExists) return true;
-  else return false;
-};
-
 exports.newMessage = async (req, res) => {
   const { chatId, senderId, message } = req.body;
 
   if (!chatId || !senderId || !message)
     throw 'Chat, sender and message must be provided.';
 
-  if (checkIfChatExistsInDatabase(chatId) === false) throw 'Chat does not exist.';
-  if (checkIfUserExistsInDatabase(senderId) === false) throw 'User does not exist.';
-
+  const chatExists = await Chat.findOne({ _id: chatId });
+  if (!chatExists) throw 'Chat does not exist.';
+  const userExists = await User.findOne({ _id: senderId });
+  if (!userExists) throw 'User does not exist.';
 
   const createdMessage = new Message({
     chat: chatId,
@@ -53,10 +40,7 @@ exports.getMessages = async (req, res) => {
     .exec();
 
   // Get all messages from the Chat IDs array.
-  const messages = await Message.find()
-    .where('chat')
-    .in(chatIds)
-    .exec();
+  const messages = await Message.find().where('chat').in(chatIds).exec();
 
   // Return the messages.
   res.json(messages);

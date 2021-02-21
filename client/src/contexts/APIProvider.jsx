@@ -181,6 +181,74 @@ const APIProvider = ({ children }) => {
     }
   };
 
+  // Clear chat messages.
+  const clearChat = async (chatName) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.delete(`/chat/messages/${chatName}`, {
+        headers,
+      });
+      // setChats([...chats.filter((chat) => chat.name !== chatName)]);
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Add chat user.
+  const addChatUser = async (chatName, username) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.put(
+        `/chat/addChatUser`,
+        {
+          name: chatName,
+          reqUser: username,
+        },
+        {
+          headers,
+        },
+      );
+      // setChats([...chats.filter((chat) => chat.name !== chatName)]);
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Remove chat user.
+  const removeChatUser = async (chatName, username) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.put(
+        `/chat/removeChatUser`,
+        {
+          name: chatName,
+          reqUser: username,
+        },
+        {
+          headers,
+        },
+      );
+      // setChats([...chats.filter((chat) => chat.name !== chatName)]);
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
   // Join existing chat.
   const joinChat = async (chatName) => {
     const headers = {
@@ -249,6 +317,7 @@ const APIProvider = ({ children }) => {
     newChat,
     joinChat,
     leaveChat,
+    clearChat,
     chats,
     setChats,
     messages,
@@ -257,6 +326,8 @@ const APIProvider = ({ children }) => {
     newContact,
     contacts,
     deleteChat,
+    addChatUser,
+    removeChatUser,
   };
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;

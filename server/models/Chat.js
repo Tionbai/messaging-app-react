@@ -6,10 +6,17 @@ const chatSchema = new mongoose.Schema(
       type: String,
       required: 'Name is required.',
     },
+    admin:
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: 'Admin is required.'
+      },
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: 'Users are required.'
       },
     ],
     messages: [

@@ -9,5 +9,8 @@ router.post('/', auth, catchErrors(chatController.newChat));
 router.put('/join', auth, catchErrors(chatController.joinChat));
 router.put('/leave', auth, catchErrors(chatController.leaveChat));
 router.delete('/:name', auth, catchErrors(chatController.deleteChat));
+router.delete('/messages/:name', auth, catchErrors(chatController.clearChat));
+router.put('/addChatUser', auth, catchErrors(chatController.addChatUser));
+router.put('/removeChatUser', auth, catchErrors(chatController.removeChatUser));
 
 module.exports = router;

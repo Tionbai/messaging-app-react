@@ -4,8 +4,9 @@ import { Modal, Form, Button } from 'react-bootstrap';
 
 const ModalTemplate = (props) => {
   const { modalOptions, setActiveModal } = props;
-  const { headerString, labelString, buttonString } = modalOptions;
+  const { headerString, labelString, labelString2, buttonString } = modalOptions;
   const inputRef = useRef();
+  const inputRef2 = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +23,12 @@ const ModalTemplate = (props) => {
             <Form.Label>{labelString}</Form.Label>
             <Form.Control type="text" ref={inputRef} required />
           </Form.Group>
+          {labelString2 && (
+            <Form.Group>
+              <Form.Label>{labelString2}</Form.Label>
+              <Form.Control type="text" ref={inputRef2} required />
+            </Form.Group>
+          )}
           <Button type="submit">{buttonString}</Button>
         </Form>
       </Modal.Body>
