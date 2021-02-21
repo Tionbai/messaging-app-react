@@ -187,7 +187,7 @@ const APIProvider = ({ children }) => {
       Authorization: `Bearer ${token}`,
     };
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         '/chat/join',
         {
           name: chatName,
@@ -198,6 +198,30 @@ const APIProvider = ({ children }) => {
       );
       console.log(response.data);
       setChats([...chats, response.data]);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Leave existing chat.
+  const leaveChat = async (chatName) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.put(
+        '/chat/leave',
+        {
+          name: chatName,
+        },
+        {
+          headers,
+        },
+      );
+      console.log(response.data);
+      setChats([...chats.filter((chat) => chat.name !== response.data)]);
       return response.data;
     } catch (err) {
       console.log(err.response);
@@ -224,6 +248,7 @@ const APIProvider = ({ children }) => {
     getChats,
     newChat,
     joinChat,
+    leaveChat,
     chats,
     setChats,
     messages,

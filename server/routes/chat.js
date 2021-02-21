@@ -6,7 +6,8 @@ const auth = require('../middlewares/auth.js');
 
 router.get('/', auth, catchErrors(chatController.getAllChats));
 router.post('/', auth, catchErrors(chatController.newChat));
+router.put('/join', auth, catchErrors(chatController.joinChat));
+router.put('/leave', auth, catchErrors(chatController.leaveChat));
 router.delete('/:name', auth, catchErrors(chatController.deleteChat));
-router.post('/join', auth, catchErrors(chatController.joinChat));
 
 module.exports = router;

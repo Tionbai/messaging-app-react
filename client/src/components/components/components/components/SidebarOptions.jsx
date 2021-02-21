@@ -5,23 +5,29 @@ import ModalTemplate from './ModalTemplate';
 
 const SidebarOptions = () => {
   const [activeModal, setActiveModal] = useState(false);
-  const { newChat, joinChat, deleteChat, newContact } = useAPI();
+  const { newChat, joinChat, leaveChat, deleteChat, newContact } = useAPI();
 
   const modalOptions = {
     newChat: {
-      headerString: 'New Chat',
+      headerString: 'New chat',
       labelString: 'Chat name',
       buttonString: 'Create',
       submitFunc: newChat,
     },
     joinChat: {
-      headerString: 'Join Chat',
+      headerString: 'Join chat',
       labelString: 'Chat name',
       buttonString: 'Join',
       submitFunc: joinChat,
     },
+    leaveChat: {
+      headerString: 'Leave chat',
+      labelString: 'Chat name',
+      buttonString: 'Leave',
+      submitFunc: leaveChat,
+    },
     deleteChat: {
-      headerString: 'Delete Chat',
+      headerString: 'Delete chat',
       labelString: 'Chat name',
       buttonString: 'Delete',
       submitFunc: deleteChat,
@@ -40,19 +46,25 @@ const SidebarOptions = () => {
         className="p-2 border-top rounded-0"
         onClick={() => setActiveModal(modalOptions.joinChat)}
       >
-        Join Chat
+        Join chat
+      </Button>
+      <Button
+        className="p-2 border-top rounded-0"
+        onClick={() => setActiveModal(modalOptions.leaveChat)}
+      >
+        Leave chat
       </Button>
       <Button
         className="p-2 border-top rounded-0"
         onClick={() => setActiveModal(modalOptions.newChat)}
       >
-        New Chat
+        New chat
       </Button>
       <Button
         className="p-2 border-top rounded-0"
         onClick={() => setActiveModal(modalOptions.deleteChat)}
       >
-        Delete Chat
+        Delete chat
       </Button>
       <Button
         className="p-2 border-top rounded-0"

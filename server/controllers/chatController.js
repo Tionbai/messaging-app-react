@@ -77,6 +77,29 @@ exports.joinChat = async (req, res) => {
   res.json(chat);
 };
 
+// Leave existing chat.
+exports.leaveChat = async (req, res) => {
+  const { name } = req.body;
+  const userId = req.payload;
+
+  // Check is chat and user exists in database by name.
+  if (checkIfChatExistsInDatabase(name) === false) throw 'Chat does not exist.';
+  if (checkIfUserExistsInDatabase(userId) === false)
+    throw 'User does not exist.';
+
+  // Check if chat has user
+  const chatWithUser = await Chat.findOne({ name: name }).and({
+    users: { $in: userId },
+  });
+
+  if (!chatWithUser) throw 'You are not in this chat.';
+
+  await chatWithUser.updateOne({ $pull: { users: { $in: userId } } });
+  await chatWithUser.save();
+
+  res.json(chatWithUser.name);
+};
+
 // Delete existing chat.
 exports.deleteChat = async (req, res) => {
   const { name } = req.params;

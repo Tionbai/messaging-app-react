@@ -27,3 +27,13 @@ const App = () => {
 };
 
 export default App;
+
+// TODO: Leave chat. You can not leave chat as admin.
+
+// TODO: Clear chat of messages
+
+// TODO: Delete message
+
+// TODO: Only admin can delete chat
+
+// TODO: Make another user admin
