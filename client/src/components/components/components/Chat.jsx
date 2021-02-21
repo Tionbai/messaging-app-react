@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, InputGroup, ListGroup, Button } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
-import { useChatroom } from '../../../contexts/ChatroomProvider';
+import { useChat } from '../../../contexts/ChatProvider';
 
-const Chatroom = () => {
+const Chat = () => {
   const [text, setText] = useState('');
-  const { sendMessage, selectedChatroom, filteredMessages } = useChatroom();
+  const { sendMessage, selectedChat, filteredMessages } = useChat();
   const lastMessageRef = useRef();
 
   const handleSubmit = (e) => {
@@ -34,8 +34,8 @@ const Chatroom = () => {
   return (
     <section className="d-flex flex-column flex-grow-1">
       <section className="m-2 flex-grow-1 overflow-auto">
-        <h2>{selectedChatroom[0].name}</h2>
-        <p>{selectedChatroom[0]._id}</p>
+        <h2>{selectedChat[0].name}</h2>
+        <p>{selectedChat[0]._id}</p>
         <ListGroup className="d-flex flex-column">
           {filteredMessages.map((message, index) => {
             const lastMessage = filteredMessages.length - 1 === index;
@@ -72,4 +72,4 @@ const Chatroom = () => {
   );
 };
 
-export default Chatroom;
+export default Chat;

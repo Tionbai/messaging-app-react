@@ -16,22 +16,10 @@ const userSchema = new mongoose.Schema(
     },
     contacts: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
       },
-    ],
-    chatrooms: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Chatroom',
-      },
-    ],
-    messages: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message',
-      },
-    ],
+    ]
   },
   {
     timestamps: true,

@@ -103,7 +103,7 @@ exports.getContacts = async (req, res) => {
 };
 
 // Ref in req.body is either username or email
-exports.addContact = async (req, res) => {
+exports.newContact = async (req, res) => {
   const userId = req.payload;
   const { ref } = req.body;
 

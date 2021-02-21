@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const chatroomSchema = new mongoose.Schema(
+const chatSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -9,14 +9,13 @@ const chatroomSchema = new mongoose.Schema(
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        required: 'Users are required.',
         ref: 'User',
       },
     ],
     messages: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message',
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Message',
       },
     ],
   },
@@ -25,6 +24,6 @@ const chatroomSchema = new mongoose.Schema(
   },
 );
 
-const Chatroom = mongoose.model('Chatroom', chatroomSchema);
+const Chat = mongoose.model('Chat', chatSchema);
 
-module.exports = Chatroom;
+module.exports = Chat;

@@ -1,54 +1,61 @@
-require('../models/Chatroom.js');
+require('../models/Chat.js');
 const mongoose = require('mongoose');
-const Chatroom = mongoose.model('Chatroom');
+const Chat = mongoose.model('Chat');
 const User = mongoose.model('User');
 const Message = mongoose.model('Message');
 
-exports.createMessage = async (req, res) => {
-  const { chatroomId, senderId, message } = req.body;
+const checkIfChatExistsInDatabase = async (chatId) => {
+  const chatExists = await Chat.findOne({ _id: chatId });
 
-  if (!chatroomId || !senderId || !message)
-    throw 'Chatroom, sender and message must be provided.';
+  if (chatExists) return true;
+  else return false;
+};
 
-  const chatroomIdExists = await Chatroom.findOne({ _id: chatroomId });
+const checkIfUserExistsInDatabase = async (userId) => {
+  const userExists = await User.findOne({ _id: userId });
 
-  const senderExists = await User.findOne({ _id: senderId });
+  if (userExists) return true;
+  else return false;
+};
 
-  if (!chatroomIdExists) throw 'Chatroom does not exist.';
+exports.newMessage = async (req, res) => {
+  const { chatId, senderId, message } = req.body;
 
-  if (!senderExists) throw 'The user does not exist.';
+  if (!chatId || !senderId || !message)
+    throw 'Chat, sender and message must be provided.';
 
-  const newMessage = new Message({
-    chatroom: chatroomId,
+  if (checkIfChatExistsInDatabase(chatId) === false) throw 'Chat does not exist.';
+  if (checkIfUserExistsInDatabase(senderId) === false) throw 'User does not exist.';
+
+
+  const createdMessage = new Message({
+    chat: chatId,
     sender: senderId,
     text: message,
   });
 
-  await newMessage.save();
+  await createdMessage.save();
 
-  res.json({
-    data: newMessage,
-    message: 'Message created.',
-  });
+  res.json(createdMessage);
 };
 
 // Get all messages the user has access to.
 exports.getMessages = async (req, res) => {
   const userId = req.payload;
 
-  // Get array of chatroom IDs for all the user's accessed chatrooms.
-  const chatroomIds = await Chatroom.find()
+  // Get array of Chat IDs for all the user's accessed Chats.
+  const chatIds = await Chat.find()
     .where('users')
     // (This can be an array of user IDs)
     .in(userId)
-    // Only return the IDs of the chatrooms.
+    // Only return the IDs of the Chats.
     .distinct('_id')
     .exec();
 
-  // Get all messages from the chatroom IDs array.
+  // Get all messages from the Chat IDs array.
   const messages = await Message.find()
-    .where('chatroom')
-    .in(chatroomIds)
+    .where('chat')
+    .in(chatIds)
     .exec();
 
   // Return the messages.

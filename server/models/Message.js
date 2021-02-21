@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema(
   {
-    chatroom: {
+    chat: {
       type: mongoose.Schema.Types.ObjectId,
-      required: 'Chatroom is required.',
-      ref: 'Chatroom',
+      required: 'Chat is required.',
+      ref: 'Chat',
     },
     sender: {
       type: mongoose.Schema.Types.ObjectId,

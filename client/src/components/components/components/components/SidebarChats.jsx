@@ -2,26 +2,26 @@ import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../../contexts/APIProvider';
-import { useChatroom } from '../../../../contexts/ChatroomProvider';
+import { useChat } from '../../../../contexts/ChatProvider';
 
-const SidebarChatrooms = () => {
-  const { chatrooms } = useAPI();
-  const { selectChatroom } = useChatroom();
+const SidebarChats = () => {
+  const { chats } = useAPI();
+  const { selectChat } = useChat();
 
   return (
     <ListGroup variant="flush">
-      {chatrooms &&
-        chatrooms.map((chatroom) => {
+      {chats &&
+        chats.map((chat) => {
           return (
             <ListGroup.Item
               className="p-2 border-right-0"
               key={uuidv4()}
               action
-              active={chatroom.selected}
-              onClick={() => selectChatroom(chatroom._id)}
+              active={chat.selected}
+              onClick={() => selectChat(chat._id)}
             >
               Room:
-              {` ${chatroom.name}`}
+              {` ${chat.name}`}
             </ListGroup.Item>
           );
         })}
@@ -29,4 +29,4 @@ const SidebarChatrooms = () => {
   );
 };
 
-export default SidebarChatrooms;
+export default SidebarChats;

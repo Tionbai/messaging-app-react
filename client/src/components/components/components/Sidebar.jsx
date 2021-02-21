@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, Tab, Button } from 'react-bootstrap';
 import { useAPI } from '../../../contexts/APIProvider';
 import SidebarOptions from './components/SidebarOptions';
-import SidebarChatrooms from './components/SidebarChatrooms';
+import SidebarChatrooms from './components/SidebarChats';
 import SidebarContacts from './components/SidebarContacts';
 
 const chatroomsKey = 'chatrooms';

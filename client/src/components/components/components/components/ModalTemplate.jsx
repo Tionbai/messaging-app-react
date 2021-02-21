@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { Modal, Form, Button } from 'react-bootstrap';
 
 const ModalTemplate = (props) => {
-  const { modalOptions } = props;
+  const { modalOptions, setActiveModal } = props;
   const { headerString, labelString, buttonString } = modalOptions;
   const inputRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     modalOptions.submitFunc(inputRef.current.value);
+    setActiveModal(false);
   };
 
   return (
@@ -30,6 +31,7 @@ const ModalTemplate = (props) => {
 
 ModalTemplate.propTypes = {
   modalOptions: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+  setActiveModal: PropTypes.func.isRequired,
 };
 
 export default ModalTemplate;

@@ -5,7 +5,7 @@ const auth = require('../middlewares/auth.js');
 
 router.post('/login', catchErrors(userController.login));
 router.post('/register', catchErrors(userController.register));
-router.get('/getcontacts', auth, catchErrors(userController.getContacts));
-router.post('/addcontact', auth, catchErrors(userController.addContact));
+router.get('/getContacts', auth, catchErrors(userController.getContacts));
+router.post('/newContact', auth, catchErrors(userController.newContact));
 
 module.exports = router;

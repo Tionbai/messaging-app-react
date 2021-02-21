@@ -3,7 +3,7 @@ const socket = require('socket.io');
 const jwt = require('jsonwebtoken');
 // Bring in all the models
 const mongoose = require('mongoose');
-const Chatroom = require('./models/Chatroom.js');
+const Chat = require('./models/Chat.js');
 const User = require('./models/User.js');
 const Message = require('./models/Message.js');
 
@@ -39,37 +39,34 @@ io.on('connection', (socket) => {
     console.log(`Disconnected: ${socket.userId}`);
   });
 
-  socket.on('send-message', async ({ chatroomId, message }) => {
+  socket.on('send-message', async ({ chatId, message }) => {
     if (message.trim().length > 0) {
-      const chatroom = await Chatroom.findOne({ _id: chatroomId });
+      const chat = await Chat.findOne({ _id: chatId });
       const user = await User.findOne({ _id: socket.userId });
 
-      chatroom.users.forEach((user) => {
+      chat.users.forEach((user) => {
         io.to(user._id.toString()).emit('receive-message', {
-          chatroom: chatroomId,
+          chat: chatId,
           sender: user._id.toString(),
           message: message,
         });
       });
 
       const newMessage = new Message({
-        chatroom: chatroomId,
-        sender: user._id.toString(),
+        chat: chatId,
+        sender: user._id,
         message: message,
       });
       await newMessage.save();
 
-      const updateDatabaseOnNewMessage = async (chatroomId, userId, messageId) => {
-        const chatroom = await Chatroom.findOne({ _id: chatroomId });
-        const user = await User.findOne({ _id: userId });
+      const updateDatabaseOnNewMessage = async (chatId, messageId) => {
+        const chat = await Chat.findOne({ _id: chatId });
         
-        await chatroom.messages.push(messageId);
-        await user.messages.push(messageId);
+        await chat.messages.push(messageId);
         
-        await chatroom.save();
-        await user.save();
+        await chat.save();
       };
-      await updateDatabaseOnNewMessage(chatroomId, user._id, newMessage._id);
+      await updateDatabaseOnNewMessage(chatId, newMessage._id);
     }
   });
 });

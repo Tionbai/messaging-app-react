@@ -5,32 +5,32 @@ import ModalTemplate from './ModalTemplate';
 
 const SidebarOptions = () => {
   const [activeModal, setActiveModal] = useState(false);
-  const { createChatroom, joinChatroom, deleteChatroom, addContact } = useAPI();
+  const { newChat, joinChat, deleteChat, newContact } = useAPI();
 
   const modalOptions = {
-    createChatroom: {
-      headerString: 'Create chatroom',
-      labelString: 'Chatroom name',
-      buttonString: 'Create',
-      submitFunc: createChatroom,
+    newChat: {
+      headerString: 'New Chat',
+      labelString: 'Chat name',
+      buttonString: 'New',
+      submitFunc: newChat,
     },
-    joinChatroom: {
-      headerString: 'Join chatroom',
-      labelString: 'Chatroom name',
+    joinChat: {
+      headerString: 'Join Chat',
+      labelString: 'Chat name',
       buttonString: 'Join',
-      submitFunc: joinChatroom,
+      submitFunc: joinChat,
     },
-    deleteChatroom: {
-      headerString: 'Delete chatroom',
-      labelString: 'Chatroom name',
+    deleteChat: {
+      headerString: 'Delete Chat',
+      labelString: 'Chat name',
       buttonString: 'Delete',
-      submitFunc: deleteChatroom,
+      submitFunc: deleteChat,
     },
-    addContact: {
-      headerString: 'Add contact',
+    newContact: {
+      headerString: 'New contact',
       labelString: 'Contact username or email',
-      buttonString: 'Add',
-      submitFunc: addContact,
+      buttonString: 'New',
+      submitFunc: newContact,
     },
   };
 
@@ -38,30 +38,30 @@ const SidebarOptions = () => {
     <>
       <Button
         className="p-2 border-top rounded-0"
-        onClick={() => setActiveModal(modalOptions.joinChatroom)}
+        onClick={() => setActiveModal(modalOptions.joinChat)}
       >
-        Join chatroom
+        Join Chat
       </Button>
       <Button
         className="p-2 border-top rounded-0"
-        onClick={() => setActiveModal(modalOptions.createChatroom)}
+        onClick={() => setActiveModal(modalOptions.newChat)}
       >
-        Create chatroom
+        New Chat
       </Button>
       <Button
         className="p-2 border-top rounded-0"
-        onClick={() => setActiveModal(modalOptions.deleteChatroom)}
+        onClick={() => setActiveModal(modalOptions.deleteChat)}
       >
-        Delete chatroom
+        Delete Chat
       </Button>
       <Button
         className="p-2 border-top rounded-0"
         onClick={() => setActiveModal(modalOptions.addContact)}
       >
-        Add contact
+        New contact
       </Button>
       <Modal show={activeModal !== false} onHide={() => setActiveModal(false)}>
-        <ModalTemplate modalOptions={activeModal} />
+        <ModalTemplate modalOptions={activeModal} setActiveModal={setActiveModal} />
       </Modal>
     </>
   );
