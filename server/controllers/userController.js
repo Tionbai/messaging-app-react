@@ -152,3 +152,42 @@ exports.newContact = async (req, res) => {
     console.error(err);
   }
 };
+
+// Ref in req.params is either username or email
+exports.deleteContact = async (req, res) => {
+  try {
+    const userId = req.payload;
+    const { ref } = req.params;
+
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) throw 'Only a registered user can delete contacts.';
+
+    // Find user in database by either username or email.
+    const userExists = await User.findOne().or([
+      { username: ref },
+      { email: ref },
+    ]);
+
+    if (!userExists) throw 'User does not exist.';
+
+    const theUserIsYou = userId.toString() === userExists._id.toString();
+
+    if (theUserIsYou) throw 'You are not a contact.';
+
+    const userAlreadyInContacts = await User.find(user).and({
+      contacts: { $in: userExists._id },
+    });
+
+    if (!userAlreadyInContacts.length)
+      throw 'The user is not in your contacts.';
+
+    // Delete user from contacts and save in database.
+    await user.updateOne({ $pull: { contacts: { $in: [userExists._id] } } });
+    // await user.save();
+
+    res.json(userExists._id);
+  } catch (err) {
+    console.error(err);
+  }
+};

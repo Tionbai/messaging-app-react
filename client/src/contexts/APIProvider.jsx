@@ -77,7 +77,7 @@ const APIProvider = ({ children }) => {
       Authorization: `Bearer ${token}`,
     };
     try {
-      const response = await axios.get('/user/getContacts', {
+      const response = await axios.get('/user/contacts', {
         headers,
       });
       setContacts([...response.data]);
@@ -94,8 +94,8 @@ const APIProvider = ({ children }) => {
       Authorization: `Bearer ${token}`,
     };
     try {
-      const response = await axios.post(
-        '/user/newContact',
+      const response = await axios.put(
+        '/user/contacts/new',
         {
           ref: contactRef,
         },
@@ -105,6 +105,24 @@ const APIProvider = ({ children }) => {
       );
       console.log(response.data);
       setContacts([...contacts, response.data]);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Add new contact given a contact ref (username or email).
+  const deleteContact = async (contactRef) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.delete(`/user/contacts/${contactRef}`, {
+        headers,
+      });
+      console.log(response.data);
+      setContacts([...contacts.filter((contact) => contact._id !== response.data)]);
       return response.data;
     } catch (err) {
       console.log(err.response);
@@ -364,6 +382,7 @@ const APIProvider = ({ children }) => {
     getMessages,
     deleteMessage,
     newContact,
+    deleteContact,
     contacts,
     deleteChat,
     addChatUser,
