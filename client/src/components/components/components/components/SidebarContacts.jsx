@@ -8,7 +8,11 @@ const Contacts = () => {
   return (
     <ListGroup variant="flush">
       {contacts.map((contact) => (
-        <ListGroup.Item key={contact.username}>{contact.username}</ListGroup.Item>
+        <ListGroup.Item key={contact.username}>
+          {contact._id}
+          <br />
+          {contact.username}
+        </ListGroup.Item>
       ))}
     </ListGroup>
   );

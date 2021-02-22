@@ -13,6 +13,7 @@ const SidebarOptions = () => {
     clearChat,
     addChatUser,
     removeChatUser,
+    makeAdmin,
     newContact,
     deleteMessage,
   } = useAPI();
@@ -61,6 +62,13 @@ const SidebarOptions = () => {
       labelString2: 'User username',
       buttonString: 'Remove',
       submitFunc: removeChatUser,
+    },
+    makeAdmin: {
+      headerString: 'Transfer admin rights',
+      labelString: 'Chat name',
+      labelString2: 'User username',
+      buttonString: 'Transfer',
+      submitFunc: makeAdmin,
     },
     newContact: {
       headerString: 'New contact',
@@ -119,6 +127,12 @@ const SidebarOptions = () => {
         onClick={() => setActiveModal(modalOptions.removeChatUser)}
       >
         Remove chat user
+      </Button>
+      <Button
+        className="p-2 border-top rounded-0"
+        onClick={() => setActiveModal(modalOptions.makeAdmin)}
+      >
+        Transfer admin rights
       </Button>
       <Button
         className="p-2 border-top rounded-0"

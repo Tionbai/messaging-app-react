@@ -146,6 +146,7 @@ const APIProvider = ({ children }) => {
     };
     try {
       const response = await axios.delete(`/message/${messageId}`, { headers });
+      setMessages([...messages.filter((message) => message._id !== response.data)]);
       console.log(response.data);
       return response.data;
       // return setMessages([...response.data]);
@@ -206,7 +207,7 @@ const APIProvider = ({ children }) => {
       const response = await axios.delete(`/chat/messages/${chatName}`, {
         headers,
       });
-      // setChats([...chats.filter((chat) => chat.name !== chatName)]);
+      setMessages([...messages.filter((message) => message.chat !== response.data)]);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -231,7 +232,6 @@ const APIProvider = ({ children }) => {
           headers,
         },
       );
-      // setChats([...chats.filter((chat) => chat.name !== chatName)]);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -256,7 +256,30 @@ const APIProvider = ({ children }) => {
           headers,
         },
       );
-      // setChats([...chats.filter((chat) => chat.name !== chatName)]);
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Transfer admin rights to user.
+  const makeAdmin = async (chatName, username) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.put(
+        `/chat/makeAdmin`,
+        {
+          name: chatName,
+          reqUser: username,
+        },
+        {
+          headers,
+        },
+      );
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -345,6 +368,7 @@ const APIProvider = ({ children }) => {
     deleteChat,
     addChatUser,
     removeChatUser,
+    makeAdmin,
   };
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;

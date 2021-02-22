@@ -83,7 +83,7 @@ exports.leaveChat = async (req, res) => {
     const { name } = req.body;
     const userId = req.payload;
 
-    // Check is chat and user exists in database by name.
+    // Check if chat and user exists in database by name.
     const chatExists = await Chat.findOne({ name: name });
     if (!chatExists) throw 'Chat does not exist.';
     const userExists = await User.findOne({ _id: userId });
@@ -115,7 +115,7 @@ exports.clearChat = async (req, res) => {
     const { name } = req.params;
     const userId = req.payload;
 
-    // Check is chat and user exists in database by name.
+    // Check if chat and user exists in database by name.
     const chatExists = await Chat.findOne({ name: name });
     if (!chatExists) throw 'Chat does not exist.';
     const userExists = await User.findOne({ _id: userId });
@@ -145,13 +145,13 @@ exports.clearChat = async (req, res) => {
   }
 };
 
-// Clear chat of messages.
+// Add chat user.
 exports.addChatUser = async (req, res) => {
   try {
     const { name, reqUser } = req.body;
     const userId = req.payload;
 
-    // Check is chat and user exists in database by name.
+    // Check if chat and user exists in database by name.
     const chatExists = await Chat.findOne({ name: name });
     if (!chatExists) throw 'Chat does not exist.';
     const userExists = await User.findOne({ _id: userId });
@@ -187,7 +187,7 @@ exports.removeChatUser = async (req, res) => {
     const { name, reqUser } = req.body;
     const userId = req.payload;
 
-    // Check is chat and user exists in database by name.
+    // Check if chat and user exists in database by name.
     const chatExists = await Chat.findOne({ name: name });
     if (!chatExists) throw 'Chat does not exist.';
     const userExists = await User.findOne({ _id: userId });
@@ -221,6 +221,42 @@ exports.removeChatUser = async (req, res) => {
   }
 };
 
+// Make user admin.
+exports.makeAdmin = async (req, res) => {
+  try {
+    const { name, reqUser } = req.body;
+    const userId = req.payload;
+
+    // Check if chat and user exists in database by name.
+    const chatExists = await Chat.findOne({ name: name });
+    if (!chatExists) throw 'Chat does not exist.';
+    const userExists = await User.findOne({ _id: userId });
+    if (!userExists) throw 'User does not exist.';
+
+    // Check if user is admin
+    const chatWithUserAsAdmin = await Chat.findOne({ name: name }).and({
+      admin: { $in: userId },
+    });
+
+    if (!chatWithUserAsAdmin) throw 'Only admin can transfer admin rights.';
+
+    const reqUserId = await User.findOne({ name: reqUser }).select('_id');
+    const chatWithReqUser = await Chat.findOne({
+      name: name,
+      users: { $in: reqUserId },
+    });
+
+    if (!chatWithReqUser)
+      throw 'The user must be added to the chat to be given admin rights.';
+
+    await chatWithUserAsAdmin.updateOne({ admin: reqUserId });
+
+    res.json(chatWithUserAsAdmin.name);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // Delete existing chat.
 exports.deleteChat = async (req, res) => {
   try {
@@ -236,7 +272,7 @@ exports.deleteChat = async (req, res) => {
     const chatWithAdmin = await Chat.findOne({ name: name }).and({
       admin: userId,
     });
-    if (!chatWithAdmin) throw 'You do not have permission to delete this chat.';
+    if (!chatWithAdmin) throw 'Only admin can delete the chat.';
 
     await Message.deleteMany({ chat: chatWithAdmin._id }).exec();
 

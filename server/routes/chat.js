@@ -12,5 +12,6 @@ router.delete('/:name', auth, catchErrors(chatController.deleteChat));
 router.delete('/messages/:name', auth, catchErrors(chatController.clearChat));
 router.put('/addChatUser', auth, catchErrors(chatController.addChatUser));
 router.put('/removeChatUser', auth, catchErrors(chatController.removeChatUser));
+router.put('/makeAdmin', auth, catchErrors(chatController.makeAdmin));
 
 module.exports = router;
