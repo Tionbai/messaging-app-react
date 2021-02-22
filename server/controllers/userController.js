@@ -107,6 +107,7 @@ exports.delete = async (req, res) => {
     const { ref } = req.params;
     const { password } = req.body;
 
+    // Check if user is found in database by username or email ref.
     const userExists = await User.findOne({
       $or: [{ username: ref }, { email: ref }],
     });
@@ -119,6 +120,7 @@ exports.delete = async (req, res) => {
       }
     }
 
+    // Check if password provided is correct.
     const validCredentials = await User.findOne({
       $or: [{ username: ref }, { email: ref }],
       password: sha256(password + process.env.SALT),
@@ -126,18 +128,46 @@ exports.delete = async (req, res) => {
 
     if (userExists && !validCredentials) throw 'The password is incorrect.';
 
+    // Find all chats where user is user.
     const chatsWithUser = await Chat.find({
       users: { $in: validCredentials._id },
     });
+    // Find all chats where user is admin.
+    const chatswithUserAsAdmin = await Chat.find({
+      admin: validCredentials._id,
+    });
 
+    // If user is admin in chat(s), transfer admin rights if users length > 1, else delete chat.
+    chatswithUserAsAdmin.forEach(async (chat) => {
+      try {
+        if (chat.users.length > 0) {
+          // Find chat users besides the admin
+          const chatUsers = await chat.users.filter(
+            (user) => user.toString() !== validCredentials._id.toString(),
+          );
+          // Transfer admin rights to another user.
+          await chat.updateOne({ admin: chatUsers[0] });
+          // Delete chat if no other users.
+        } else {
+          chat.delete();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // Find all messages sent by user.
     const messagesByUser = await Message.find({ sender: validCredentials._id });
 
+    // Remove user and user messages from all chats they are added to.
     chatsWithUser.forEach(async (chat) => {
       try {
+        // Remove user refs as..
         await chat.updateOne({
           $pull: { users: { $in: [validCredentials._id] } },
         });
         messagesByUser.forEach(async (message) => {
+          // Remove messages ref.
           await chat.updateOne({
             $pull: { messages: { $in: [message._id] } },
           });
@@ -146,8 +176,11 @@ exports.delete = async (req, res) => {
         console.error(err);
       }
     });
+
+    // Delete all messages sent from user.
     await Message.deleteMany({ sender: validCredentials._id });
 
+    // Delete user.
     await userExists.delete();
 
     res.json(userId);
