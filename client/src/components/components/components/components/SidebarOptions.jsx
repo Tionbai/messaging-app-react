@@ -17,6 +17,7 @@ const SidebarOptions = () => {
     newContact,
     deleteContact,
     deleteMessage,
+    deleteUser,
   } = useAPI();
 
   const modalOptions = {
@@ -89,6 +90,13 @@ const SidebarOptions = () => {
       buttonString: 'Delete',
       submitFunc: deleteMessage,
     },
+    deleteUser: {
+      headerString: 'Delete account',
+      labelString: 'Username or email',
+      labelString2: 'Password',
+      buttonString: 'Delete',
+      submitFunc: deleteUser,
+    },
   };
 
   return (
@@ -158,6 +166,12 @@ const SidebarOptions = () => {
         onClick={() => setActiveModal(modalOptions.deleteMessage)}
       >
         Delete message
+      </Button>
+      <Button
+        className="p-2 border-top rounded-0"
+        onClick={() => setActiveModal(modalOptions.deleteUser)}
+      >
+        Delete account
       </Button>
       <Modal show={activeModal !== false} onHide={() => setActiveModal(false)}>
         <ModalTemplate modalOptions={activeModal} setActiveModal={setActiveModal} />

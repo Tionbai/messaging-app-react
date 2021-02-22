@@ -10,7 +10,11 @@ const ModalTemplate = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    modalOptions.submitFunc(inputRef.current.value);
+    if (labelString2) {
+      modalOptions.submitFunc(inputRef.current.value, inputRef2.current.value);
+    } else {
+      modalOptions.submitFunc(inputRef.current.value);
+    }
     setActiveModal(false);
   };
 

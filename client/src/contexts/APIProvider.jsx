@@ -66,6 +66,28 @@ const APIProvider = ({ children }) => {
     }
   };
 
+  // Delete user account and redirect to register page.
+  const deleteUser = async (userRef, userPassword) => {
+    const config = {
+      data: {
+        password: userPassword,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const response = await axios.delete(`/user/${userRef}`, config);
+      history.push('/register');
+      localStorage.removeItem('CHAT_Token');
+      console.log(response.data);
+      return setApiResponseMessageFunc({ type: 'success', message: response.data.message });
+    } catch (err) {
+      console.log(err.response);
+      return setApiResponseMessageFunc({ type: 'error', message: err.response.data.message });
+    }
+  };
+
   // Get token after user logs in.
   useEffect(() => {
     setToken(localStorage.getItem('CHAT_Token'));
@@ -370,6 +392,7 @@ const APIProvider = ({ children }) => {
     typeError,
     registerUser,
     loginUser,
+    deleteUser,
     getChats,
     newChat,
     joinChat,

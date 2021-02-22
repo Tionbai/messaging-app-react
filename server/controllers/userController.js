@@ -1,6 +1,8 @@
 require('../models/User.js');
 const mongoose = require('mongoose');
+const Chat = mongoose.model('Chat');
 const User = mongoose.model('User');
+const Message = mongoose.model('Message');
 const sha256 = require('js-sha256');
 const jwt = require('jsonwebtoken');
 
@@ -30,14 +32,14 @@ exports.register = async (req, res) => {
         message: 'Password must be at least 6 characters long.',
       });
 
-    const usernameExists = await User.findOne({
+    const userExists = await User.findOne({
       username,
     });
     const emailExists = await User.findOne({
       email,
     });
 
-    if (usernameExists)
+    if (userExists)
       errorMessages.push({
         type: 'error-username',
         message: `The username ${username} is already taken.`,
@@ -73,18 +75,18 @@ exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const usernameExists = await User.findOne({
+    const userExists = await User.findOne({
       username,
     });
 
-    if (!usernameExists) throw `Username ${username} does not exist.`;
+    if (!userExists) throw `Username ${username} does not exist.`;
 
     const user = await User.findOne({
       username,
       password: sha256(password + process.env.SALT),
     });
 
-    if (usernameExists && !user) throw 'The password is incorrect.';
+    if (userExists && !user) throw 'The password is incorrect.';
 
     // ID is Mongoose document's _id. Set user token to id and secret.
     const token = jwt.sign({ id: user.id }, process.env.SECRET);
@@ -93,6 +95,62 @@ exports.login = async (req, res) => {
       message: 'User logged in successfully.',
       token,
     });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// Delete user account from database
+exports.delete = async (req, res) => {
+  try {
+    const userId = req.payload;
+    const { ref } = req.params;
+    const { password } = req.body;
+
+    const userExists = await User.findOne({
+      $or: [{ username: ref }, { email: ref }],
+    });
+
+    if (!userExists) {
+      if (ref.includes('@')) {
+        throw 'Wrong email.';
+      } else {
+        throw 'Wrong username.';
+      }
+    }
+
+    const validCredentials = await User.findOne({
+      $or: [{ username: ref }, { email: ref }],
+      password: sha256(password + process.env.SALT),
+    });
+
+    if (userExists && !validCredentials) throw 'The password is incorrect.';
+
+    const chatsWithUser = await Chat.find({
+      users: { $in: validCredentials._id },
+    });
+
+    const messagesByUser = await Message.find({ sender: validCredentials._id });
+
+    chatsWithUser.forEach(async (chat) => {
+      try {
+        await chat.updateOne({
+          $pull: { users: { $in: [validCredentials._id] } },
+        });
+        messagesByUser.forEach(async (message) => {
+          await chat.updateOne({
+            $pull: { messages: { $in: [message._id] } },
+          });
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    });
+    await Message.deleteMany({ sender: validCredentials._id });
+
+    await userExists.delete();
+
+    res.json(userId);
   } catch (err) {
     console.error(err);
   }
