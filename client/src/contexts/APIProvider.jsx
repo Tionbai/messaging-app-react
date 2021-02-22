@@ -139,6 +139,22 @@ const APIProvider = ({ children }) => {
     }
   };
 
+  // Get all messages.
+  const deleteMessage = async (messageId) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.delete(`/message/${messageId}`, { headers });
+      console.log(response.data);
+      return response.data;
+      // return setMessages([...response.data]);
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
   // Create new chat.
   const newChat = async (chatName) => {
     const headers = {
@@ -323,6 +339,7 @@ const APIProvider = ({ children }) => {
     messages,
     setMessages,
     getMessages,
+    deleteMessage,
     newContact,
     contacts,
     deleteChat,

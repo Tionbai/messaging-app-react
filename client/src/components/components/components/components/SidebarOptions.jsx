@@ -14,6 +14,7 @@ const SidebarOptions = () => {
     addChatUser,
     removeChatUser,
     newContact,
+    deleteMessage,
   } = useAPI();
 
   const modalOptions = {
@@ -67,6 +68,12 @@ const SidebarOptions = () => {
       buttonString: 'Add',
       submitFunc: newContact,
     },
+    deleteMessage: {
+      headerString: 'Delete message',
+      labelString: 'Message Id',
+      buttonString: 'Delete',
+      submitFunc: deleteMessage,
+    },
   };
 
   return (
@@ -118,6 +125,12 @@ const SidebarOptions = () => {
         onClick={() => setActiveModal(modalOptions.newContact)}
       >
         New contact
+      </Button>
+      <Button
+        className="p-2 border-top rounded-0"
+        onClick={() => setActiveModal(modalOptions.deleteMessage)}
+      >
+        Delete message
       </Button>
       <Modal show={activeModal !== false} onHide={() => setActiveModal(false)}>
         <ModalTemplate modalOptions={activeModal} setActiveModal={setActiveModal} />

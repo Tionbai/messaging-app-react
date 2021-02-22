@@ -45,6 +45,8 @@ const Chat = () => {
                 key={uuidv4()}
                 ref={lastMessage ? lastMessageRef : null}
               >
+                {message._id}
+                <br />
                 {message.message}
               </ListGroup.Item>
             );

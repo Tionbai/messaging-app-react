@@ -14,7 +14,7 @@ const useChat = () => {
 
 const ChatProvider = ({ children }) => {
   const { chats, messages, setMessages } = useAPI();
-  const [selectedChat, setSelectedChat] = useState(chats[0]);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const socket = useSocket();
 

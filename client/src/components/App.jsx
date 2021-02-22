@@ -28,6 +28,4 @@ const App = () => {
 
 export default App;
 
-// TODO: Delete message
-
 // TODO: Make another user admin
