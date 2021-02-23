@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import { Button } from '@material-ui/core';
 import { useAPI } from '../../../../contexts/APIProvider';
 import ModalTemplate from './ModalTemplate';
 

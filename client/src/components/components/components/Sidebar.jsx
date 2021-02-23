@@ -22,7 +22,7 @@ const Sidebar = () => {
     <nav style={{ width: '250px' }} className="d-flex flex-column border justify-content-end">
       <section className="d-flex flex-column flex-grow-1">
         <Tabs activeKey={key} onSelect={(k) => setKey(k)}>
-          <Tab eventKey={chatroomsKey} title="Chatrooms">
+          <Tab eventKey={chatroomsKey} title="Chats">
             <SidebarChatrooms />
           </Tab>
           <Tab eventKey={contactsKey} title="Contacts">
