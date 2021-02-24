@@ -1,20 +1,20 @@
 import React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { List, Button } from '@material-ui/core';
 import { useAPI } from '../../../../contexts/APIProvider';
 
 const Contacts = () => {
   const { contacts } = useAPI();
 
   return (
-    <ListGroup variant="flush">
+    <List>
       {contacts.map((contact) => (
-        <ListGroup.Item key={contact.username}>
+        <Button key={contact.username}>
           {contact._id}
           <br />
           {contact.username}
-        </ListGroup.Item>
+        </Button>
       ))}
-    </ListGroup>
+    </List>
   );
 };
 

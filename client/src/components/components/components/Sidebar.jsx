@@ -1,15 +1,58 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
 import { useAPI } from '../../../contexts/APIProvider';
 import SidebarOptions from './components/SidebarOptions';
-import SidebarChatrooms from './components/SidebarChats';
+import SidebarChats from './components/SidebarChats';
 import SidebarContacts from './components/SidebarContacts';
 
-const chatroomsKey = 'chatrooms';
-const contactsKey = 'contacts';
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    flexDirection: 'column',
+    width: 250,
+  },
+}));
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      /* eslint-disable-next-line react/jsx-props-no-spreading */
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number,
+  value: PropTypes.number,
+};
+TabPanel.defaultProps = {
+  children: PropTypes.node,
+  index: PropTypes.number,
+  value: PropTypes.number,
+};
 
 const Sidebar = () => {
-  const [key, setKey] = useState(chatroomsKey);
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
   const { setToken } = useAPI();
 
   const handleLogout = (e) => {
@@ -18,23 +61,37 @@ const Sidebar = () => {
     setToken(null);
   };
 
+  const handleChange = (e, newValue) => {
+    e.preventDefault();
+    setValue(newValue);
+  };
+
   return (
-    <nav style={{ width: '250px' }} className="d-flex flex-column border justify-content-end">
-      <section className="d-flex flex-column flex-grow-1">
-        <Tabs activeKey={key} onSelect={(k) => setKey(k)}>
-          <Tab eventKey={chatroomsKey} title="Chats">
-            <SidebarChatrooms />
-          </Tab>
-          <Tab eventKey={contactsKey} title="Contacts">
-            <SidebarContacts />
-          </Tab>
-        </Tabs>
-      </section>
-      <SidebarOptions />
-      <Button variant="outline" className="p-2 border-top rounded-0" onClick={handleLogout}>
+    <Paper className={classes.root}>
+      <Tabs
+        // variant="fullWidth"
+        indicatorColor="primary"
+        value={value}
+        onChange={handleChange}
+      >
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <Tab style={{ minWidth: 125 }} label="Chats" {...a11yProps(0)} />
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <Tab style={{ minWidth: 125 }} label="Contacts" {...a11yProps(1)} />
+      </Tabs>
+      <Box style={{ flexGrow: 1 }}>
+        <TabPanel value={value} index={0}>
+          <SidebarOptions />
+          <SidebarChats />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <SidebarContacts />
+        </TabPanel>
+      </Box>
+      <Button variant="outlined" onClick={handleLogout}>
         Logout
       </Button>
-    </nav>
+    </Paper>
   );
 };
 

@@ -25,7 +25,7 @@ const Dashboard = () => {
   }, [messages, selectedChat]);
 
   return (
-    <main className="d-flex vh-100 vw-100">
+    <main style={{ display: 'flex', height: '100vh', width: '100vw' }}>
       <Sidebar />
       {selectedChat && <Chat />}
     </main>
