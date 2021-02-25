@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { InputAdornment, TextField } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 
 export default function Search({ valueString, value, setFilteredValue }) {
   const [search, setSearch] = useState('');
@@ -20,7 +21,17 @@ export default function Search({ valueString, value, setFilteredValue }) {
     }
   }, [search, value]);
   return (
-    <TextField label={`Search ${valueString}`} variant="outlined" onChange={handleSearch} />
+    <TextField
+      label={`Search ${valueString}`}
+      onChange={handleSearch}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 }
 

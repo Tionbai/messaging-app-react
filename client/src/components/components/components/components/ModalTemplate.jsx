@@ -26,30 +26,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalTemplate = (props) => {
+const ModalTemplate = React.forwardRef((props, ref) => {
   const classes = useStyles();
-  const { modalOptions, setActiveModal } = props;
-  const { headerString, labelString, labelString2 } = modalOptions;
+  const { value, setActiveModal } = props;
+  const { headerString, labelString, labelString2, submitFunc } = value;
   const inputRef = useRef();
   const inputRef2 = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (labelString2) {
-      modalOptions.submitFunc(inputRef.current.value, inputRef2.current.value);
+      submitFunc(inputRef.current.value, inputRef2.current.value);
     } else {
-      modalOptions.submitFunc(inputRef.current.value);
+      submitFunc(inputRef.current.value);
     }
     setActiveModal(false);
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper ref={ref} className={classes.paper}>
       <form className={classes.form} onSubmit={handleSubmit}>
         <Typography variant="h5">{headerString}</Typography>
-        <TextField type="text" label={labelString} inputRef={inputRef} required />
+        <TextField type="text" label={labelString} refs={inputRef} required />
         {labelString2 && (
-          <TextField type="text" label={labelString2} inputRef={inputRef2} required />
+          <TextField type="text" label={labelString2} refs={inputRef2} required />
         )}
         <Box className={classes.buttons}>
           <Button variant="contained" color="primary" type="submit">
@@ -60,10 +60,10 @@ const ModalTemplate = (props) => {
       </form>
     </Paper>
   );
-};
+});
 
 ModalTemplate.propTypes = {
-  modalOptions: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
   setActiveModal: PropTypes.func.isRequired,
 };
 

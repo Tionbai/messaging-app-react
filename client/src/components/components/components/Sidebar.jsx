@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
+import { Grid, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
 import { useAPI } from '../../../contexts/APIProvider';
 import SidebarChats from './components/SidebarChats';
 import SidebarContacts from './components/SidebarContacts';
@@ -33,18 +33,18 @@ function TabPanel(props) {
       /* eslint-disable-next-line react/jsx-props-no-spreading */
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
+      {value === index && <Grid p={3}>{children}</Grid>}
     </div>
   );
 }
 
 TabPanel.propTypes = {
-  children: PropTypes.node,
+  children: Object(PropTypes.object),
   index: PropTypes.number,
   value: PropTypes.number,
 };
 TabPanel.defaultProps = {
-  children: PropTypes.node,
+  children: Object(PropTypes.object),
   index: PropTypes.number,
   value: PropTypes.number,
 };
@@ -67,25 +67,18 @@ const Sidebar = () => {
 
   return (
     <Paper className={classes.root}>
-      <Tabs
-        // variant="fullWidth"
-        indicatorColor="primary"
-        value={value}
-        onChange={handleChange}
-      >
+      <Tabs indicatorColor="primary" value={value} onChange={handleChange}>
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Tab style={{ minWidth: 125 }} label="Chats" {...a11yProps(0)} />
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Tab style={{ minWidth: 125 }} label="Contacts" {...a11yProps(1)} />
       </Tabs>
-      <Box style={{ flexGrow: 1 }}>
-        <TabPanel value={value} index={0}>
-          <SidebarChats />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <SidebarContacts />
-        </TabPanel>
-      </Box>
+      <TabPanel value={value} index={0} style={{ flexGrow: 1 }}>
+        <SidebarChats />
+      </TabPanel>
+      <TabPanel value={value} index={1} style={{ flexGrow: 1 }}>
+        <SidebarContacts />
+      </TabPanel>
       <Button variant="outlined" onClick={handleLogout}>
         Logout
       </Button>

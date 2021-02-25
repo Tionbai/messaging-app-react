@@ -66,7 +66,7 @@ const Chat = () => {
       <Grid item>
         <Typography variant="h4">{selectedChat[0].name}</Typography>
         <Divider />
-        <Typography variant="p">{selectedChat[0]._id}</Typography>
+        <Typography variant="body1">{selectedChat[0]._id}</Typography>
       </Grid>
       <Grid item style={{ flex: 1 }}>
         <List>
