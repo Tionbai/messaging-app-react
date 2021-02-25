@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
 import { useAPI } from '../../../contexts/APIProvider';
-import SidebarOptions from './components/SidebarOptions';
 import SidebarChats from './components/SidebarChats';
 import SidebarContacts from './components/SidebarContacts';
 
@@ -81,7 +80,6 @@ const Sidebar = () => {
       </Tabs>
       <Box style={{ flexGrow: 1 }}>
         <TabPanel value={value} index={0}>
-          <SidebarOptions />
           <SidebarChats />
         </TabPanel>
         <TabPanel value={value} index={1}>
