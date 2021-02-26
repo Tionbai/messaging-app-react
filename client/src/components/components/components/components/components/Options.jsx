@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Menu, List, MenuItem, Modal } from '@material-ui/core';
+import { IconButton, Menu, List, MenuItem, Modal, makeStyles } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons/';
 import ModalTemplate from './ModalTemplate';
 
+const useStyles = makeStyles(() => ({
+  iconButton: {
+    padding: 10,
+  },
+}));
+
 const Options = ({ values }) => {
+  const classes = useStyles();
   const [activeModal, setActiveModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -32,9 +39,14 @@ const Options = ({ values }) => {
   useEffect(() => {}, []);
   return (
     <>
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+      <IconButton
+        className={classes.iconButton}
+        aria-controls="simple-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
         <MoreHoriz />
-      </Button>
+      </IconButton>
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {values.map((value) => {
           return (

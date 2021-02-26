@@ -28,7 +28,7 @@ export default function OptionsValues() {
   } = useAPI();
 
   const values = {
-    chats: [
+    chats0: [
       {
         icon: <Add />,
         headerString: 'New chat',
@@ -41,6 +41,8 @@ export default function OptionsValues() {
         labelString: 'Chat name',
         submitFunc: joinChat,
       },
+    ],
+    chats1: [
       {
         icon: <Remove />,
         headerString: 'Leave chat',

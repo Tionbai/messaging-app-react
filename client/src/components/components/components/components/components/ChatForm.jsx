@@ -43,7 +43,12 @@ const ChatForm = () => {
         style={{ width: '100%', resize: 'none' }}
         onKeyDown={handleShiftEnter}
       />
-      <Button color="primary" variant="contained" type="submit" style={{ height: 40 }}>
+      <Button
+        color="primary"
+        variant="contained"
+        type="submit"
+        style={{ height: 40, backgroundColor: '#2979ff', color: 'white' }}
+      >
         <Send />
       </Button>
     </form>

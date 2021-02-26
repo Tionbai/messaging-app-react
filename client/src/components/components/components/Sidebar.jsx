@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons/';
-import { useAPI } from '../../../contexts/APIProvider';
+import { Grid, Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import SidebarChats from './components/SidebarChats';
 import SidebarContacts from './components/SidebarContacts';
+import Account from './components/Account';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: '#f5f5f5',
     display: 'flex',
     flexDirection: 'column',
     width: 250,
@@ -53,13 +52,6 @@ TabPanel.defaultProps = {
 const Sidebar = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { setToken } = useAPI();
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('CHAT_Token');
-    setToken(null);
-  };
 
   const handleChange = (e, newValue) => {
     e.preventDefault();
@@ -68,9 +60,7 @@ const Sidebar = () => {
 
   return (
     <Paper className={classes.root}>
-      <Box>
-        <AccountCircle />
-      </Box>
+      <Account />
       <Tabs indicatorColor="primary" value={value} onChange={handleChange}>
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Tab style={{ minWidth: 125 }} label="Chats" {...a11yProps(0)} />
@@ -83,9 +73,6 @@ const Sidebar = () => {
       <TabPanel value={value} index={1} style={{ flexGrow: 1 }}>
         <SidebarContacts />
       </TabPanel>
-      <Button variant="outlined" onClick={handleLogout}>
-        Logout
-      </Button>
     </Paper>
   );
 };
