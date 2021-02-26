@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
-import Chat from './components/Chat';
+import Chat from './components/components/Chat';
 import { useAPI } from '../../contexts/APIProvider';
 import { useChat } from '../../contexts/ChatProvider';
 import history from '../../history';
 
 const Dashboard = () => {
-  const { token, chats, messages } = useAPI();
-  const { selectChat, selectedChat, filterMessages } = useChat();
+  const { token, chats } = useAPI();
+  const { selectChat, selectedChat } = useChat();
 
   useEffect(() => {
     if (!token) history.push('/login');
@@ -18,11 +18,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (chats.length) selectChat(chats[0]._id);
   }, [chats]);
-
-  // Filter messages when Chat is selected and when message state updates.
-  useEffect(() => {
-    if (selectedChat) filterMessages(selectedChat[0]._id);
-  }, [messages, selectedChat]);
 
   return (
     <main style={{ display: 'flex', height: '100vh', width: '100vw' }}>

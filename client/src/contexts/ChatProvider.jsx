@@ -13,25 +13,34 @@ const useChat = () => {
 };
 
 const ChatProvider = ({ children }) => {
-  const { chats, messages, setMessages } = useAPI();
+  const { chats, user, messages } = useAPI();
   const [selectedChat, setSelectedChat] = useState(null);
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const socket = useSocket();
 
+  const formattedChat = (chat) => {
+    if (chat && user) {
+      const newMessages = chat.messages.map((message) => {
+        const fromMe = message.sender === user._id;
+        const messageSender = chat.users.map((chatuser) => {
+          if (message.sender === chatuser._id) return chatuser.username;
+          return '';
+        });
+
+        return { ...message, fromMe, senderName: messageSender };
+      });
+      return { ...chat, messages: newMessages };
+    }
+    return null;
+  };
+
   // Select a chat to display given a chat ID (from dashboard/sidebar).
   const selectChat = (chatId) => {
-    const chat = chats.filter((room) => {
-      return chatId === room._id;
+    const chat = chats.filter((c) => {
+      return chatId === c._id;
     });
-    chats.map((room) => {
-      const newRoom = room;
-      newRoom.selected = false;
-      if (chatId === room._id) {
-        newRoom.selected = true;
-      }
-      return newRoom;
-    });
-    setSelectedChat([...chat]);
+    chat.selected = true;
+    setSelectedChat(chat[0]);
   };
 
   // Filter messages to display given a chat ID (from dashboard/sidebar).
@@ -43,7 +52,7 @@ const ChatProvider = ({ children }) => {
   };
 
   const addMessageToChat = ({ chat, sender, message }) => {
-    setMessages([...messages, { chat, sender, message }]);
+    setSelectedChat({ ...selectedChat, messages: [...messages, { chat, sender, message }] });
   };
 
   useEffect(() => {
@@ -55,11 +64,12 @@ const ChatProvider = ({ children }) => {
   }, [socket, addMessageToChat]);
 
   const sendMessage = (text) => {
-    socket.emit('send-message', { chatId: selectedChat[0]._id, message: text });
+    socket.emit('send-message', { chatId: selectedChat._id, message: text });
   };
 
   const value = {
     selectedChat,
+    formattedChat: formattedChat(selectedChat),
     selectChat,
     sendMessage,
     messages,

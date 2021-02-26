@@ -47,9 +47,9 @@ const ModalTemplate = React.forwardRef((props, ref) => {
     <Paper ref={ref} className={classes.paper}>
       <form className={classes.form} onSubmit={handleSubmit}>
         <Typography variant="h5">{headerString}</Typography>
-        <TextField type="text" label={labelString} refs={inputRef} required />
+        <TextField type="text" label={labelString} inputRef={inputRef} required />
         {labelString2 && (
-          <TextField type="text" label={labelString2} refs={inputRef2} required />
+          <TextField type="text" label={labelString2} inputRef={inputRef2} required />
         )}
         <Box className={classes.buttons}>
           <Button variant="contained" color="primary" type="submit">

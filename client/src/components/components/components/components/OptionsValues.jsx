@@ -1,3 +1,14 @@
+import React from 'react';
+import {
+  Add,
+  EmojiPeople,
+  Remove,
+  DeleteForever,
+  ClearAll,
+  PersonAdd,
+  PersonAddDisabled,
+  TransferWithinAStation,
+} from '@material-ui/icons/';
 import { useAPI } from '../../../../contexts/APIProvider';
 
 export default function OptionsValues() {
@@ -19,43 +30,51 @@ export default function OptionsValues() {
   const values = {
     chats: [
       {
+        icon: <Add />,
         headerString: 'New chat',
         labelString: 'Chat name',
         submitFunc: newChat,
       },
       {
+        icon: <EmojiPeople />,
         headerString: 'Join chat',
         labelString: 'Chat name',
         submitFunc: joinChat,
       },
       {
+        icon: <Remove />,
         headerString: 'Leave chat',
         labelString: 'Chat name',
         submitFunc: leaveChat,
       },
       {
+        icon: <DeleteForever />,
         headerString: 'Delete chat',
         labelString: 'Chat name',
         submitFunc: deleteChat,
       },
       {
+        icon: <ClearAll />,
         headerString: 'Clear chat',
         labelString: 'Chat name',
         submitFunc: clearChat,
       },
       {
+        icon: <PersonAdd />,
         headerString: 'Add chat user',
         labelString: 'Chat name',
         labelString2: 'Username',
         submitFunc: addChatUser,
       },
       {
+        icon: <PersonAddDisabled />,
         headerString: 'Remove chat user',
         labelString: 'Chat name',
         labelString2: 'Username',
         submitFunc: removeChatUser,
       },
       {
+        icon: <TransferWithinAStation />,
         headerString: 'Transfer admin rights',
         labelString: 'Chat name',
         labelString2: 'Username',
@@ -64,11 +83,13 @@ export default function OptionsValues() {
     ],
     contacts: [
       {
+        icon: <Add />,
         headerString: 'New contact',
         labelString: 'Username or email',
         submitFunc: newContact,
       },
       {
+        icon: <Remove />,
         headerString: 'Delete contact',
         labelString: 'Username or email',
         submitFunc: deleteContact,
@@ -76,6 +97,7 @@ export default function OptionsValues() {
     ],
     messages: [
       {
+        icon: <DeleteForever />,
         headerString: 'Delete message',
         labelString: 'Message Id',
         submitFunc: deleteMessage,
@@ -83,6 +105,7 @@ export default function OptionsValues() {
     ],
     user: [
       {
+        icon: <DeleteForever />,
         headerString: 'Delete account',
         labelString: 'Username or email',
         labelString2: 'Password',

@@ -84,16 +84,35 @@ exports.login = async (req, res) => {
     const user = await User.findOne({
       username,
       password: sha256(password + process.env.SALT),
-    });
+    }).select('_id username email contacts');
 
     if (userExists && !user) throw 'The password is incorrect.';
 
     // ID is Mongoose document's _id. Set user token to id and secret.
     const token = jwt.sign({ id: user.id }, process.env.SECRET);
 
-    res.json({
-      message: 'User logged in successfully.',
-      token,
+    await user.execPopulate('contacts').then((result) => {
+      res.json({
+        message: 'User logged in successfully.',
+        token,
+        user: result,
+      });
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.payload;
+
+    const user = await User.findOne({
+      _id: userId,
+    }).select('_id username email contacts');
+
+    await user.execPopulate('contacts', '_id username email').then((result) => {
+      res.json(result);
     });
   } catch (err) {
     console.error(err);

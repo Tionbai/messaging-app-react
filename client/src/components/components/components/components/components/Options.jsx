@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Menu, List, MenuItem, Modal } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { MoreHoriz } from '@material-ui/icons/';
 import ModalTemplate from './ModalTemplate';
 
 const Options = ({ values }) => {
@@ -33,13 +33,14 @@ const Options = ({ values }) => {
   return (
     <>
       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        <ArrowDropDownIcon />
+        <MoreHoriz />
       </Button>
       <Menu keepMounted anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {values.map((value) => {
           return (
             <List key={value.headerString}>
               <MenuItem onClick={(e) => handleMenuClick(e, value)}>
+                {value.icon}
                 {value.headerString}
               </MenuItem>
             </List>

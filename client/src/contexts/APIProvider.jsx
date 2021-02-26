@@ -14,6 +14,7 @@ const APIProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('CHAT_Token'));
   const [apiResponseMessage, setApiResponseMessage] = useState('');
   const [chats, setChats] = useState([]);
+  const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [messages, setMessages] = useState([]);
 
@@ -60,9 +61,23 @@ const APIProvider = ({ children }) => {
       });
       history.push('/dashboard');
       localStorage.setItem('CHAT_Token', response.data.token);
+      setUser(response.data.user);
       return setApiResponseMessageFunc({ type: 'success', message: response.data.message });
     } catch (err) {
       return setApiResponseMessageFunc({ type: 'error', message: err.response.data.message });
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const response = await axios.get('/user/', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return setUser(response.data);
+    } catch (err) {
+      return err.response;
     }
   };
 
@@ -159,7 +174,7 @@ const APIProvider = ({ children }) => {
     };
     try {
       const response = await axios.get('/chat', { headers });
-      return setChats([...response.data]);
+      return setChats(response.data);
     } catch (err) {
       return err.response;
     }
@@ -379,6 +394,7 @@ const APIProvider = ({ children }) => {
   useEffect(() => {
     getChats();
     getContacts();
+    getUser();
   }, []);
 
   useEffect(() => {
@@ -392,6 +408,7 @@ const APIProvider = ({ children }) => {
     typeError,
     registerUser,
     loginUser,
+    user,
     deleteUser,
     getChats,
     newChat,

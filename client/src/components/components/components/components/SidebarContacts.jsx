@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Box, List, Button } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../../contexts/APIProvider';
-import Search from './Search';
-import Options from './Options';
+import Search from './components/Search';
+import Options from './components/Options';
 import OptionsValues from './OptionsValues';
 
 const Contacts = () => {

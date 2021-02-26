@@ -10,8 +10,19 @@ exports.getAllChats = async (req, res) => {
     const userId = req.payload;
 
     const chats = await Chat.find().where('users').in(userId);
-
-    res.json(chats);
+    let populatedChats = [];
+    await Promise.all(
+      chats.map(async (chat) => {
+        await chat
+          .execPopulate('users', '_id username email')
+          .then(async (result) => {
+            await result.execPopulate('messages').then(async (result2) => {
+              populatedChats.push(result2);
+            });
+          });
+      }),
+    );
+    await res.json(populatedChats);
   } catch (err) {
     console.error(err);
   }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
+import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
+import { AccountCircle } from '@material-ui/icons/';
 import { useAPI } from '../../../contexts/APIProvider';
 import SidebarChats from './components/SidebarChats';
 import SidebarContacts from './components/SidebarContacts';
@@ -67,6 +68,9 @@ const Sidebar = () => {
 
   return (
     <Paper className={classes.root}>
+      <Box>
+        <AccountCircle />
+      </Box>
       <Tabs indicatorColor="primary" value={value} onChange={handleChange}>
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Tab style={{ minWidth: 125 }} label="Chats" {...a11yProps(0)} />
