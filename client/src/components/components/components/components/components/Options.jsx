@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Menu, List, MenuItem, Modal, makeStyles } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons/';
@@ -36,7 +36,6 @@ const Options = ({ values }) => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {}, []);
   return (
     <>
       <IconButton
@@ -69,7 +68,5 @@ const Options = ({ values }) => {
 export default Options;
 
 Options.propTypes = {
-  // valueString: PropTypes.string.isRequired,
   values: Object(PropTypes.array).isRequired,
-  // setFilteredValue: PropTypes.func.isRequired,
 };

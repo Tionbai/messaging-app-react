@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { List, Box, Grid, makeStyles, Button, Typography } from '@material-ui/core';
+import {
+  List,
+  Box,
+  Grid,
+  makeStyles,
+  IconButton,
+  ListItem,
+  Typography,
+} from '@material-ui/core';
 import { ForumOutlined } from '@material-ui/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../../contexts/APIProvider';
@@ -11,11 +19,27 @@ import Options from './components/Options';
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
+    padding: (0, 10),
+  },
+  chat: {
+    display: 'flex',
     flexDrection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
     textTransform: 'none',
     padding: 10,
+    width: '100%',
+    height: 75,
+  },
+  chatIcon: {
+    backgroundColor: 'white',
+    border: '1px solid darkgrey',
+  },
+  chatTitle: {
+    fontWeight: 'bold',
+  },
+  chatPreview: {
+    textTransform: 'none',
   },
   selected: { backgroundColor: '#e8f4fd' },
 }));
@@ -29,7 +53,7 @@ const SidebarChats = () => {
 
   return (
     <List>
-      <Box style={{ display: 'flex', padding: (0, 10) }}>
+      <Box className={classes.root}>
         <Searchfield
           valueString="chats"
           value={chats}
@@ -40,26 +64,24 @@ const SidebarChats = () => {
       {filteredChats &&
         filteredChats.map((chat, index) => {
           return (
-            <Button
-              className={`${classes.root} ${
+            <ListItem
+              className={`${classes.chat} ${
                 filteredChats.indexOf(selectedChat) === index && classes.selected
               }`}
-              style={{ width: '100%', height: 75 }}
               onClick={() => selectChat(chat._id)}
               key={uuidv4()}
             >
-              <Grid container alignItems="center" align="center" style={{ width: '100%' }}>
+              <Grid container justify="space-between" alignItems="center" align="center">
                 <Grid item alignSelf="center">
-                  <ForumOutlined style={{ marginRight: '1.5rem' }} />
+                  <IconButton className={classes.chatIcon}>
+                    <ForumOutlined />
+                  </IconButton>
                 </Grid>
-                <Grid container item xs={7} direction="column" alignItems="flex-start">
-                  <Typography
-                    style={{ color: '#2979ff', fontWeight: 'bold' }}
-                    variant="subtitle1"
-                  >
+                <Grid container item xs={6} direction="column" alignItems="flex-start">
+                  <Typography className={classes.chatTitle} variant="subtitle1">
                     {` ${chat.name}`}
                   </Typography>
-                  <Typography variant="body1" style={{ textTransform: 'lowercase' }}>
+                  <Typography variant="body1" className={classes.chatPreview}>
                     {` ${chat.messages[chat.messages.length - 1].message}`}
                   </Typography>
                 </Grid>
@@ -67,7 +89,7 @@ const SidebarChats = () => {
                   <Options values={values.chats1} />
                 </Grid>
               </Grid>
-            </Button>
+            </ListItem>
           );
         })}
     </List>

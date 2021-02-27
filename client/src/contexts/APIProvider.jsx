@@ -16,7 +16,6 @@ const APIProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([]);
-  const [messages, setMessages] = useState([]);
 
   // Set and remove API response message after a short time.
   const setApiResponseMessageFunc = (value) => {
@@ -180,28 +179,14 @@ const APIProvider = ({ children }) => {
     }
   };
 
-  // Get all messages.
-  const getMessages = async () => {
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-    try {
-      const response = await axios.get('/message', { headers });
-      return setMessages([...response.data]);
-    } catch (err) {
-      console.log(err.response);
-      return err.response;
-    }
-  };
-
-  // Get all messages.
-  const deleteMessage = async (messageId) => {
+  // Delete a single message.
+  const deleteMessage = async (chatId, messageId) => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
     try {
       const response = await axios.delete(`/message/${messageId}`, { headers });
-      setMessages([...messages.filter((message) => message._id !== response.data)]);
+      // TODO: Delete message from chat.
       console.log(response.data);
       return response.data;
       // return setMessages([...response.data]);
@@ -262,7 +247,7 @@ const APIProvider = ({ children }) => {
       const response = await axios.delete(`/chat/messages/${chatName}`, {
         headers,
       });
-      setMessages([...messages.filter((message) => message.chat !== response.data)]);
+      // TODO: Delete all messages from chat.
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -397,10 +382,6 @@ const APIProvider = ({ children }) => {
     getUser();
   }, []);
 
-  useEffect(() => {
-    getMessages();
-  }, [chats]);
-
   const value = {
     token,
     setToken,
@@ -417,9 +398,6 @@ const APIProvider = ({ children }) => {
     clearChat,
     chats,
     setChats,
-    messages,
-    setMessages,
-    getMessages,
     deleteMessage,
     newContact,
     deleteContact,

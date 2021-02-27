@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, makeStyles } from '@material-ui/core';
+import { Box, IconButton, TextField, makeStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons/';
 import { useChat } from '../../../../../contexts/ChatProvider';
 
@@ -7,7 +7,19 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+  },
+  textfield: {
+    width: '95%',
+    resize: 'none',
+  },
+  iconfield: {
+    width: '5%',
+    textAlign: 'center',
+  },
+  icon: {
+    backgroundColor: '#2979ff',
+    color: 'white',
   },
 }));
 
@@ -38,19 +50,17 @@ const ChatForm = () => {
         as="textarea"
         variant="outlined"
         required
+        placeholder="Write something"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        style={{ width: '100%', resize: 'none' }}
+        className={classes.textfield}
         onKeyDown={handleShiftEnter}
       />
-      <Button
-        color="primary"
-        variant="contained"
-        type="submit"
-        style={{ height: 40, backgroundColor: '#2979ff', color: 'white' }}
-      >
-        <Send />
-      </Button>
+      <Box className={classes.iconfield}>
+        <IconButton color="primary" variant="contained" type="submit" className={classes.icon}>
+          <Send fontSize="large" />
+        </IconButton>
+      </Box>
     </form>
   );
 };

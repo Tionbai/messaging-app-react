@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Box, List, Grid, Typography, Button, makeStyles } from '@material-ui/core';
+import {
+  Box,
+  List,
+  Grid,
+  Typography,
+  ListItem,
+  IconButton,
+  makeStyles,
+} from '@material-ui/core';
 import { Person } from '@material-ui/icons/';
 import { v4 as uuidv4 } from 'uuid';
 import { useAPI } from '../../../../contexts/APIProvider';
@@ -9,11 +17,24 @@ import OptionsValues from './OptionsValues';
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
+    padding: (0, 10),
+  },
+  contact: {
+    display: 'flex',
     flexDrection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
     textTransform: 'none',
     padding: 10,
+    width: '100%',
+    height: 75,
+  },
+  contactIcon: {
+    backgroundColor: 'white',
+    border: '1px solid darkgrey',
+  },
+  contactTitle: {
+    fontWeight: 'bold',
   },
   selected: { backgroundColor: '#e8f4fd' },
 }));
@@ -26,7 +47,7 @@ const Contacts = () => {
 
   return (
     <List>
-      <Box style={{ display: 'flex', padding: (0, 10) }}>
+      <Box className={classes.root}>
         <Searchfield
           valueString="contacts"
           value={contacts}
@@ -36,25 +57,20 @@ const Contacts = () => {
       </Box>
       {filteredContacts &&
         filteredContacts.map((contact) => (
-          <Button
-            className={classes.root}
-            style={{ width: '100%', height: 75 }}
-            key={uuidv4()}
-          >
-            <Grid container alignItems="center" align="center" style={{ width: '100%' }}>
+          <ListItem className={classes.contact} key={uuidv4()}>
+            <Grid container spacing={1} alignItems="center" align="center">
               <Grid item alignSelf="center">
-                <Person style={{ marginRight: '1.5rem' }} />
+                <IconButton className={classes.contactIcon}>
+                  <Person />
+                </IconButton>
               </Grid>
-              <Grid container item xs={7} direction="column" alignItems="flex-start">
-                <Typography
-                  style={{ color: '#2979ff', fontWeight: 'bold' }}
-                  variant="subtitle1"
-                >
+              <Grid item direction="column" alignItems="flex-start">
+                <Typography className={classes.contactTitle} variant="subtitle1">
                   {` ${contact.username}`}
                 </Typography>
               </Grid>
             </Grid>
-          </Button>
+          </ListItem>
         ))}
     </List>
   );

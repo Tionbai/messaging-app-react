@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import { ListItem, Typography, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
@@ -61,7 +60,6 @@ const ChatMessage = React.forwardRef(({ lastMessage, message }, ref) => {
   return (
     <ListItem
       style={{ alignItems: message.fromMe ? 'flex-end' : 'flex-start' }}
-      key={uuidv4()}
       className={classes.root}
       ref={lastMessage ? ref : null}
     >

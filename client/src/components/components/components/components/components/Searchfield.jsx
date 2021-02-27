@@ -76,5 +76,5 @@ Searchfield.propTypes = {
   valueString: PropTypes.string.isRequired,
   value: Object(PropTypes.array).isRequired,
   setFilteredValue: PropTypes.func.isRequired,
-  values: Object(PropTypes.object).isRequired,
+  values: Object(PropTypes.array).isRequired,
 };

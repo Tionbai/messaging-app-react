@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Grid, Divider, Typography, List, makeStyles } from '@material-ui/core';
+import { Box, Divider, Typography, List, makeStyles } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons/';
+import { v4 as uuidv4 } from 'uuid';
 import { useChat } from '../../../../contexts/ChatProvider';
 import ChatDetails from './components/ChatDetails';
 import ChatMessage from './components/ChatMessage';
@@ -8,12 +9,15 @@ import ChatForm from './components/ChatForm';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-    justifyContent: 'space-between',
     padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
   },
   messages: {
     '&::-webkit-scrollbar': { width: 0, backgroundColor: 'transparent' },
+    flex: 1,
+    overflow: 'scroll',
   },
 }));
 
@@ -32,42 +36,29 @@ const Chat = () => {
 
   // Display and format conversation based on sender and recipient.
   return (
-    <Grid container direction="column" className={classes.root}>
-      <Grid container>
-        <Grid item xs={9}>
-          <Typography variant="h4">{selectedChat.name}</Typography>
-        </Grid>
-        <Grid item xs={3} style={{ textAlign: 'right' }} onClick={handleShowChatDetails}>
-          <MoreHoriz />
-        </Grid>
-      </Grid>
+    <Box className={classes.root}>
+      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h4">{selectedChat.name}</Typography>
+        {showChatDetails && <ChatDetails chat={selectedChat} />}
+        <MoreHoriz onClick={handleShowChatDetails} />
+      </Box>
       <Divider />
-      {showChatDetails && <ChatDetails chat={selectedChat} />}
-      <Grid
-        className={classes.messages}
-        container
-        direction="column"
-        item
-        style={{ flex: 1, overflow: 'scroll' }}
-      >
-        <List>
-          {chat &&
-            chat.messages.map((message, index) => {
-              const lastMessage = chat.messages.length - 1 === index;
-              return (
-                <ChatMessage
-                  ref={lastMessageRef}
-                  message={message}
-                  lastMessage={lastMessage}
-                />
-              );
-            })}
-        </List>
-      </Grid>
-      <Grid item>
-        <ChatForm />
-      </Grid>
-    </Grid>
+      <List className={classes.messages}>
+        {chat &&
+          chat.messages.map((message, index) => {
+            const lastMessage = chat.messages.length - 1 === index;
+            return (
+              <ChatMessage
+                key={uuidv4()}
+                ref={lastMessageRef}
+                message={message}
+                lastMessage={lastMessage}
+              />
+            );
+          })}
+      </List>
+      <ChatForm />
+    </Box>
   );
 };
 

@@ -57,23 +57,3 @@ exports.deleteMessage = async (req, res) => {
     console.error(err);
   }
 };
-
-// Get all messages the user has access to.
-exports.getMessages = async (req, res) => {
-  const userId = req.payload;
-
-  // Get array of Chat IDs for all the user's accessed Chats.
-  const chatIds = await Chat.find()
-    .where('users')
-    // (This can be an array of user IDs)
-    .in(userId)
-    // Only return the IDs of the Chats.
-    .distinct('_id')
-    .exec();
-
-  // Get all messages from the Chat IDs array.
-  const messages = await Message.find().where('chat').in(chatIds).exec();
-
-  // Return the messages.
-  res.json(messages);
-};

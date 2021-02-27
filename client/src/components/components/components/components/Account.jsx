@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, makeStyles } from '@material-ui/core';
+import { Grid, Typography, IconButton, makeStyles } from '@material-ui/core';
 import { AccountCircle, ExitToApp } from '@material-ui/icons/';
 import { useAPI } from '../../../../contexts/APIProvider';
 import Options from './components/Options';
@@ -8,7 +8,7 @@ import OptionsValues from './OptionsValues';
 const useStyles = makeStyles(() => ({
   root: {
     padding: '10px 10px',
-    height: 75,
+    height: 60,
   },
 }));
 const Account = () => {
@@ -23,7 +23,7 @@ const Account = () => {
   };
   return (
     <Grid container className={classes.root} justify="space-between" alignItems="center">
-      <Grid container item xs={6} alignItems="center" alignContent="flex-start" spacing="1">
+      <Grid container item xs={6} alignItems="center" alignContent="flex-start" spacing={1}>
         <Grid item>
           <AccountCircle fontSize="large" />
         </Grid>
@@ -38,13 +38,15 @@ const Account = () => {
         alignItems="center"
         alignContent="flex-start"
         justify="flex-end"
-        spacing="1"
+        spacing={1}
       >
         <Grid item>
           <Options values={values.user} />
         </Grid>
         <Grid item>
-          <ExitToApp fontSize="large" style={{ cursor: 'pointer' }} onClick={handleLogout} />
+          <IconButton>
+            <ExitToApp onClick={handleLogout} />
+          </IconButton>
         </Grid>
       </Grid>
     </Grid>
