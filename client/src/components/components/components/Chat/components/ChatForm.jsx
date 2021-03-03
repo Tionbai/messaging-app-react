@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, IconButton, TextField, makeStyles } from '@material-ui/core';
+import { Box, IconButton, InputBase, makeStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons/';
 import { useChat } from '../../../../../contexts/ChatProvider';
 
@@ -10,11 +10,17 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   textfield: {
-    width: '95%',
+    width: '92.5%',
     resize: 'none',
+    margin: '5px 5px',
+    padding: '2px 10px',
+    backgroundColor: 'white',
+    border: '1px solid lightgrey',
+    borderRadius: '30px',
+    height: '70px',
   },
   iconfield: {
-    width: '5%',
+    width: '7.5%',
     textAlign: 'center',
   },
   icon: {
@@ -44,11 +50,10 @@ const ChatForm = () => {
   };
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
-      <TextField
+      <InputBase
         multiline
         rows={Infinity}
         as="textarea"
-        variant="outlined"
         required
         placeholder="Write something"
         value={text}

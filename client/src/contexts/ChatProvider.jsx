@@ -13,34 +13,40 @@ const useChat = () => {
 };
 
 const ChatProvider = ({ children }) => {
-  const { chats, user, messages } = useAPI();
-  const [selectedChat, setSelectedChat] = useState(null);
+  const { newPrivateChat, chats, user, messages } = useAPI();
+  const [selectedChat, setSelectedChat] = useState(chats[0]);
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const socket = useSocket();
 
   const formattedChat = (chat) => {
     if (chat && user) {
+      const privateChat = chat.private === true;
+
+      if (privateChat) {
+        const chatUserNames = chat.name.split(' ');
+        const privateChatName = chatUserNames.filter((chatUserName) => {
+          return chatUserName.toLowerCase() !== user.username.toLowerCase();
+        });
+        return { ...chat, privateChatName: privateChatName[0] };
+      }
       const newMessages = chat.messages.map((message) => {
         const fromMe = message.sender === user._id;
         const messageSender = chat.users.map((chatuser) => {
           if (message.sender === chatuser._id) return chatuser.username;
           return '';
         });
-
         return { ...message, fromMe, senderName: messageSender };
       });
       return { ...chat, messages: newMessages };
     }
-    return null;
+    return chat;
   };
 
-  // Select a chat to display given a chat ID (from dashboard/sidebar).
-  const selectChat = (chatId) => {
-    const chat = chats.filter((c) => {
-      return chatId === c._id;
+  const formattedChats = (chatsToFormat) => {
+    const newChats = chatsToFormat.map((chat) => {
+      return formattedChat(chat);
     });
-    chat.selected = true;
-    setSelectedChat(chat[0]);
+    return newChats;
   };
 
   // Filter messages to display given a chat ID (from dashboard/sidebar).
@@ -53,6 +59,14 @@ const ChatProvider = ({ children }) => {
 
   const addMessageToChat = ({ chat, sender, message }) => {
     setSelectedChat({ ...selectedChat, messages: [...messages, { chat, sender, message }] });
+  };
+
+  const newMessage = (contactName, contactId) => {
+    const filteredChat = chats.filter((chat) => {
+      return chat.private === true && chat.users.length === 2;
+    });
+    if (filteredChat) setSelectedChat(formattedChat(filteredChat[0]));
+    if (!filteredChat) newPrivateChat(`${contactName} ${user.username}`, contactId);
   };
 
   useEffect(() => {
@@ -70,7 +84,9 @@ const ChatProvider = ({ children }) => {
   const value = {
     selectedChat,
     formattedChat: formattedChat(selectedChat),
-    selectChat,
+    formattedChats: formattedChats(chats),
+    setSelectedChat,
+    newMessage,
     sendMessage,
     messages,
     filterMessages,
@@ -83,5 +99,9 @@ const ChatProvider = ({ children }) => {
 export { ChatProvider, useChat };
 
 ChatProvider.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+};
+
+ChatProvider.defaultProps = {
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };

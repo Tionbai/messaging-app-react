@@ -8,18 +8,21 @@ import Index from './components/Index';
 import { SocketProvider } from '../contexts/SocketProvider';
 import { APIProvider } from '../contexts/APIProvider';
 import { ChatProvider } from '../contexts/ChatProvider';
+import { ContactsProvider } from '../contexts/ContactsProvider';
 
 const App = () => {
   return (
     <APIProvider>
       <SocketProvider>
         <ChatProvider>
-          <Switch>
-            <Route exact path="/" component={Index} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/dashboard" component={Dashboard} />
-          </Switch>
+          <ContactsProvider>
+            <Switch>
+              <Route exact path="/" component={Index} />
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/dashboard" component={Dashboard} />
+            </Switch>
+          </ContactsProvider>
         </ChatProvider>
       </SocketProvider>
     </APIProvider>

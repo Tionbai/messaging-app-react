@@ -60,6 +60,44 @@ exports.newChat = async (req, res) => {
   }
 };
 
+// Create new chat given a name and user(id).
+exports.newPrivateChat = async (req, res) => {
+  try {
+    const { name, contactId } = req.body;
+    const userId = req.payload;
+    console.log(userId);
+
+    if (!name) throw 'Chat name must be provided.';
+
+    const nameRegex = /^[a-zA-Z\s]*$/;
+
+    if (!nameRegex.test(name))
+      throw 'Chat name can only contain alphabetical letters.';
+
+    const chatExists = await Chat.findOne({ name: name });
+    if (chatExists) throw 'The chat name already exists.';
+    const userExists = await User.findOne({ _id: userId });
+    if (!userExists) throw 'Only registered users can create chats.';
+    const contactExists = await userExists.contacts.filter(
+      (contact) => contactId === contact._id,
+    );
+    if (!contactExists) throw 'The user is not in your contacts.';
+
+    const chat = new Chat({
+      name: name,
+      admin: [userId, contactId],
+      users: [userId, contactId],
+      private: true,
+    });
+
+    await chat.save();
+
+    res.json(chat);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // Join existing chat.
 exports.joinChat = async (req, res) => {
   try {

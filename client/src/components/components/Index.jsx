@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
 import history from '../../history';
+import { useAPI } from '../../contexts/APIProvider';
 
 const Index = () => {
+  const { token } = useAPI();
+
   useEffect(() => {
-    const token = localStorage.getItem('CHAT_Token');
-    if (token) {
-      history.push('/dashboard');
-    } else {
-      history.push('/login');
-    }
+    return token ? history.push('/dashboard') : history.push('/login');
   }, []);
 
   return <></>;

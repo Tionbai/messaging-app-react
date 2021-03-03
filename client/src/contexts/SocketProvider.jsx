@@ -45,5 +45,9 @@ const SocketProvider = ({ children }) => {
 export { SocketProvider, useSocket };
 
 SocketProvider.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+};
+
+SocketProvider.defaultProps = {
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };

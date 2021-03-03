@@ -14,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     flexGrow: 1,
   },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   messages: {
     '&::-webkit-scrollbar': { width: 0, backgroundColor: 'transparent' },
     flex: 1,
@@ -37,25 +41,26 @@ const Chat = () => {
   // Display and format conversation based on sender and recipient.
   return (
     <Box className={classes.root}>
-      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{selectedChat.name}</Typography>
+      <Box className={classes.header}>
+        <Typography variant="h4">
+          {selectedChat.privateChatName || selectedChat.name}
+        </Typography>
         {showChatDetails && <ChatDetails chat={selectedChat} />}
         <MoreHoriz onClick={handleShowChatDetails} />
       </Box>
       <Divider />
       <List className={classes.messages}>
-        {chat &&
-          chat.messages.map((message, index) => {
-            const lastMessage = chat.messages.length - 1 === index;
-            return (
-              <ChatMessage
-                key={uuidv4()}
-                ref={lastMessageRef}
-                message={message}
-                lastMessage={lastMessage}
-              />
-            );
-          })}
+        {chat.messages.map((message, index) => {
+          const lastMessage = chat.messages.length - 1 === index;
+          return (
+            <ChatMessage
+              key={uuidv4()}
+              ref={lastMessageRef}
+              message={message}
+              lastMessage={lastMessage}
+            />
+          );
+        })}
       </List>
       <ChatForm />
     </Box>

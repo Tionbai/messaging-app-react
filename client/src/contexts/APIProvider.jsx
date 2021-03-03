@@ -58,12 +58,12 @@ const APIProvider = ({ children }) => {
         username,
         password,
       });
+      const loggedInUser = await response.data.user;
       history.push('/dashboard');
       localStorage.setItem('CHAT_Token', response.data.token);
-      setUser(response.data.user);
-      return setApiResponseMessageFunc({ type: 'success', message: response.data.message });
+      return setUser(loggedInUser);
     } catch (err) {
-      return setApiResponseMessageFunc({ type: 'error', message: err.response.data.message });
+      return err.response;
     }
   };
 
@@ -206,6 +206,31 @@ const APIProvider = ({ children }) => {
         '/chat',
         {
           name: chatName,
+        },
+        {
+          headers,
+        },
+      );
+      setChats([...chats, response.data]);
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response;
+    }
+  };
+
+  // Create new private chat.
+  const newPrivateChat = async (chatName, contactId) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.post(
+        '/chat/private',
+        {
+          name: chatName,
+          contactId,
         },
         {
           headers,
@@ -376,10 +401,10 @@ const APIProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    getChats();
-    getContacts();
-    getUser();
+  useEffect(async () => {
+    await getUser();
+    await getChats();
+    await getContacts();
   }, []);
 
   const value = {
@@ -393,6 +418,7 @@ const APIProvider = ({ children }) => {
     deleteUser,
     getChats,
     newChat,
+    newPrivateChat,
     joinChat,
     leaveChat,
     clearChat,
@@ -414,5 +440,9 @@ const APIProvider = ({ children }) => {
 export { useAPI, APIProvider };
 
 APIProvider.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+};
+
+APIProvider.defaultProps = {
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

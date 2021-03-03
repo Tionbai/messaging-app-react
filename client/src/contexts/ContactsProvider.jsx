@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useAPI } from './APIProvider';
 
 const ContactsContext = React.createContext();
 
@@ -10,7 +10,7 @@ const useContacts = () => {
 };
 
 const ContactsProvider = ({ children }) => {
-  const [contacts, setContacts] = useLocalStorage('contacts', []);
+  const { setContacts } = useAPI();
 
   // Create and store new contact.
   const createContact = (username) => {
@@ -19,15 +19,19 @@ const ContactsProvider = ({ children }) => {
     });
   };
 
-  return (
-    <ContactsContext.Provider value={{ contacts, createContact }}>
-      {children}
-    </ContactsContext.Provider>
-  );
+  const value = {
+    createContact,
+  };
+
+  return <ContactsContext.Provider value={value}>{children}</ContactsContext.Provider>;
 };
 
 export { useContacts, ContactsProvider };
 
 ContactsProvider.propTypes = {
-  children: Object(PropTypes.object).isRequired,
+  children: Object(PropTypes.object),
+};
+
+ContactsProvider.defaultProps = {
+  children: Object(PropTypes.object),
 };

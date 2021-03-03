@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import { Container, Box, Divider, makeStyles } from '@material-ui/core';
-import Sidebar from './components/Sidebar';
-import Chat from './components/components/Chat';
+import Sidebar from './components/Sidebar/Sidebar';
+import Chat from './components/Chat/Chat';
 import { useAPI } from '../../contexts/APIProvider';
 import { useChat } from '../../contexts/ChatProvider';
-import Account from './components/components/Account';
+import Account from './components/Account/Account';
 import history from '../../history';
 
 const useStyles = makeStyles(() => ({
@@ -25,31 +24,43 @@ const useStyles = makeStyles(() => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const { token, chats } = useAPI();
-  const { selectChat, selectedChat } = useChat();
+  const { user, token, chats } = useAPI();
+  const { formattedChats, setSelectedChat, selectedChat } = useChat();
 
   useEffect(() => {
-    if (!token) history.push('/login');
+    return !token && history.push('/login');
   }, [token]);
 
   // Select first Chat in the list on initial render.
   useEffect(() => {
-    if (chats.length) selectChat(chats[0]._id);
-  }, [chats]);
+    if (chats.length) setSelectedChat(formattedChats[0]);
+  }, [chats, setSelectedChat]);
 
   return (
     <Container className={classes.root}>
-      <Box>
-        <Account />
-        <Divider />
-      </Box>
-      <Box className={classes.content}>
-        <Sidebar />
-        <Divider orientation="vertical" flexItem />
-        {selectedChat && <Chat />}
-      </Box>
+      {user ? (
+        <>
+          <Box>
+            <Account />
+            <Divider />
+          </Box>
+          <Box className={classes.content}>
+            {selectedChat ? (
+              <>
+                <Sidebar />
+                <Divider orientation="vertical" flexItem />
+                <Chat />
+              </>
+            ) : (
+              <></>
+            )}
+          </Box>
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };
 
-export default withRouter(Dashboard);
+export default Dashboard;
