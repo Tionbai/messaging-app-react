@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, makeStyles } from '@material-ui/core';
-import { useAPI } from '../../../../contexts/APIProvider';
+import { useContacts } from '../../../../contexts/ContactsProvider';
 import { useChat } from '../../../../contexts/ChatProvider';
 import SidebarChats from './components/SidebarChats/SidebarChats';
 import SidebarContacts from './components/SidebarContacts/SidebarContacts';
@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
 
 const Sidebar = () => {
   const classes = useStyles();
-  const { contacts } = useAPI();
+  const { contacts } = useContacts();
   const { formattedChats } = useChat();
   const [filteredChats, setFilteredChats] = useState(formattedChats);
   const [filteredContacts, setFilteredContacts] = useState(contacts);

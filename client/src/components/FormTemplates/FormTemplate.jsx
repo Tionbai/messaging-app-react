@@ -19,7 +19,6 @@ const FormTemplate = ({ setValues, values, submitFunc, links, children }) => {
 
     submitFunc();
   };
-  console.log(values);
 
   return (
     <form onSubmit={handleSubmit} className={classes.root}>
@@ -54,10 +53,11 @@ FormTemplate.propTypes = {
   values: Object(PropTypes.object).isRequired,
   setValues: PropTypes.func.isRequired,
   submitFunc: PropTypes.func.isRequired,
-  links: Object(PropTypes.array).isRequired,
+  links: Object(PropTypes.array),
   children: PropTypes.func,
 };
 
 FormTemplate.defaultProps = {
+  links: Object(PropTypes.array),
   children: PropTypes.func,
 };

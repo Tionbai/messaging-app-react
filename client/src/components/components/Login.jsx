@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { useAPI } from '../../contexts/APIProvider';
+import { useUser } from '../../contexts/UserProvider';
 import history from '../../history';
 import FormContainerTemplate from '../FormTemplates/FormContainerTemplate';
 import FormTemplate from '../FormTemplates/FormTemplate';
@@ -11,7 +11,7 @@ const initialValues = {
 };
 
 const Login = () => {
-  const { token, loginUser } = useAPI();
+  const { token, loginUser } = useUser();
   const [values, setValues] = useState(initialValues);
 
   useEffect(() => {

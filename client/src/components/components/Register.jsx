@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { useAPI } from '../../contexts/APIProvider';
+import { useUser } from '../../contexts/UserProvider';
 import FormContainerTemplate from '../FormTemplates/FormContainerTemplate';
 import FormTemplate from '../FormTemplates/FormTemplate';
 
@@ -11,7 +11,7 @@ const initialValues = {
 };
 
 const Register = () => {
-  const { registerUser } = useAPI();
+  const { registerUser } = useUser();
   const [values, setValues] = useState(initialValues);
 
   return (

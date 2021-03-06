@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, IconButton, InputBase, makeStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons/';
-import { useChat } from '../../../../../contexts/ChatProvider';
+import { useMessages } from '../../../../../contexts/MessagesProvider';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
 const ChatForm = () => {
   const classes = useStyles();
   const [text, setText] = useState('');
-  const { sendMessage } = useChat();
+  const { sendMessage } = useMessages();
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -213,7 +213,7 @@ exports.addChatUser = async (req, res) => {
 
     if (!chatWithUserAsAdmin) throw 'Only admin can add new users to chat.';
 
-    const reqUserId = await User.findOne({ name: reqUser }).select('_id');
+    const reqUserId = await User.findOne({ username: reqUser }).select('_id');
     const chatWithReqUser = await Chat.findOne({
       name: name,
       users: { $in: reqUserId },
@@ -249,7 +249,7 @@ exports.removeChatUser = async (req, res) => {
 
     if (!chatWithUserAsAdmin) throw 'Only admin can remove users from chat.';
 
-    const reqUserId = await User.findOne({ name: reqUser }).select('_id');
+    const reqUserId = await User.findOne({ username: reqUser }).select('_id');
     const chatWithReqUser = await Chat.findOne({
       name: name,
       users: { $in: reqUserId },

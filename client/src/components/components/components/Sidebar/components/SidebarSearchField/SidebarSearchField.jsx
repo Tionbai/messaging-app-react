@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, IconButton, InputBase, Divider, makeStyles } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import { useAPI } from '../../../../../../contexts/APIProvider';
+import { useContacts } from '../../../../../../contexts/ContactsProvider';
 import { useChat } from '../../../../../../contexts/ChatProvider';
 import SidebarSearchFieldMenu from './components/SidebarSearchFieldMenu';
 
@@ -37,7 +37,7 @@ export default function SidebarSearchField({
   setSearch,
 }) {
   const classes = useStyles();
-  const { contacts } = useAPI();
+  const { contacts } = useContacts();
   const { formattedChats } = useChat();
 
   const handleSearch = (e) => {

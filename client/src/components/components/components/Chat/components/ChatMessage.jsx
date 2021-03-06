@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore, DeleteForever } from '@material-ui/icons';
 import MenuItemTemplate from '../../../../MenuTemplates/MenuItemTemplate';
-import { useAPI } from '../../../../../contexts/APIProvider';
+import { useMessages } from '../../../../../contexts/MessagesProvider';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -53,7 +53,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ChatMessage = React.forwardRef(({ lastMessage, message }, ref) => {
-  const { deleteMessage } = useAPI();
+  const { deleteMessage } = useMessages();
   const classes = useStyles();
   const [showTime, setShowTime] = useState(false);
   const [hover, setHover] = useState(false);

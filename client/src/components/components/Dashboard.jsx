@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, Box, Divider, makeStyles } from '@material-ui/core';
 import Sidebar from './components/Sidebar/Sidebar';
 import Chat from './components/Chat/Chat';
-import { useAPI } from '../../contexts/APIProvider';
+import { useUser } from '../../contexts/UserProvider';
 import { useChat } from '../../contexts/ChatProvider';
 import Account from './components/Account/Account';
 import history from '../../history';
@@ -24,8 +24,8 @@ const useStyles = makeStyles(() => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const { user, token, chats } = useAPI();
-  const { formattedChats, setSelectedChat, selectedChat } = useChat();
+  const { token, user } = useUser();
+  const { chats, formattedChats, setSelectedChat, selectedChat } = useChat();
 
   useEffect(() => {
     return !token && history.push('/login');

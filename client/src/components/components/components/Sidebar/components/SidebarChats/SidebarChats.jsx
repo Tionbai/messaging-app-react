@@ -48,7 +48,7 @@ const SidebarChats = ({ classes, filteredChats, search, setSearch }) => {
                 ) : null}
               </Grid>
               <Grid item>
-                <SidebarChatsMenu />
+                <SidebarChatsMenu chat={chat} />
               </Grid>
             </Grid>
           </ListItem>

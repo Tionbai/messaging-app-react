@@ -126,6 +126,9 @@ exports.delete = async (req, res) => {
     const { ref } = req.params;
     const { password } = req.body;
 
+    console.log(password);
+    console.log(ref);
+
     // Check if user is found in database by username or email ref.
     const userExists = await User.findOne({
       $or: [{ username: ref }, { email: ref }],
@@ -138,6 +141,8 @@ exports.delete = async (req, res) => {
         throw 'Wrong username.';
       }
     }
+
+    console.log(sha256(password + process.env.SALT));
 
     // Check if password provided is correct.
     const validCredentials = await User.findOne({
@@ -203,22 +208,6 @@ exports.delete = async (req, res) => {
     await userExists.delete();
 
     res.json(userId);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// Ref in req.body is either username or email
-exports.getContacts = async (req, res) => {
-  try {
-    const userId = req.payload;
-
-    const user = await User.findOne({ _id: userId });
-
-    if (!user) throw 'Only a registered user can have contacts.';
-
-    // Populate user contacts and return contacts.
-    await user.execPopulate('contacts').then((data) => res.json(data.contacts));
   } catch (err) {
     console.error(err);
   }

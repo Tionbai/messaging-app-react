@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useAPI } from './APIProvider';
-import { useSocket } from './SocketProvider';
-
-// Handle socket.io between client and server.
+import { useUser } from './UserProvider';
 
 const ChatContext = React.createContext();
 
@@ -13,10 +11,150 @@ const useChat = () => {
 };
 
 const ChatProvider = ({ children }) => {
-  const { newPrivateChat, chats, user, messages } = useAPI();
+  const { APIget, APIpost, APIput, APIdelete } = useAPI();
+  const [chats, setChats] = useState([]);
+  const { user } = useUser();
   const [selectedChat, setSelectedChat] = useState(chats[0]);
-  const [filteredMessages, setFilteredMessages] = useState(messages);
-  const socket = useSocket();
+
+  // Get all chats user is added to.
+  const getChats = async () => {
+    const route = '/chat';
+    try {
+      const response = await APIget(route);
+      return setChats(response.data);
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Create new public chat.
+  const newChat = async (chatName) => {
+    const route = '/chat';
+    const body = {
+      name: chatName,
+    };
+    try {
+      const response = await APIpost(route, body);
+      setChats([...chats, response.data]);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Create new private chat.
+  const newPrivateChat = async (chatName, contactId) => {
+    const route = '/chat/private';
+    const body = {
+      name: chatName,
+      contactId,
+    };
+    try {
+      const response = await APIpost(route, body);
+      setChats([...chats, response.data]);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Delete chat.
+  const deleteChat = async (chatName) => {
+    const route = `/chat/${chatName}`;
+    try {
+      const response = await APIdelete(route);
+      setChats([...chats.filter((chat) => chat.name !== chatName)]);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Clear chat messages.
+  const clearChat = async (chatName) => {
+    const route = `/chat/messages/${chatName}`;
+    try {
+      const response = await APIdelete(route);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Add chat user.
+  const addChatUser = async (chatName, username) => {
+    const route = '/chat/addChatUser';
+    const body = {
+      name: chatName,
+      reqUser: username,
+    };
+    try {
+      const response = await APIput(route, body);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Remove chat user.
+  const removeChatUser = async (chatName, username) => {
+    const route = '/chat/removeChatUser';
+    const body = {
+      name: chatName,
+      reqUser: username,
+    };
+    try {
+      const response = await APIput(route, body);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Transfer admin rights to user.
+  const makeAdmin = async (chatName, username) => {
+    const route = '/chat/makeAdmin';
+    const body = {
+      name: chatName,
+      reqUser: username,
+    };
+    try {
+      const response = await APIput(route, body);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Join existing chat.
+  const joinChat = async (chatName) => {
+    const route = '/chat/join';
+    const body = {
+      name: chatName,
+    };
+    try {
+      const response = await APIput(route, body);
+      setChats([...chats, response.data]);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  // Leave existing chat.
+  const leaveChat = async (chatName) => {
+    const route = '/chat/leave';
+    const body = {
+      name: chatName,
+    };
+    try {
+      const response = await APIput(route, body);
+      setChats([...chats.filter((chat) => chat.name !== response.data)]);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+  };
 
   const formattedChat = (chat) => {
     if (chat && user) {
@@ -43,54 +181,38 @@ const ChatProvider = ({ children }) => {
   };
 
   const formattedChats = (chatsToFormat) => {
-    const newChats = chatsToFormat.map((chat) => {
-      return formattedChat(chat);
-    });
-    return newChats;
+    if (chatsToFormat) {
+      const newChats = chatsToFormat.map((chat) => {
+        return formattedChat(chat);
+      });
+      return newChats;
+    }
+    return null;
   };
 
-  // Filter messages to display given a chat ID (from dashboard/sidebar).
-  const filterMessages = (chatId) => {
-    const filtered = messages.filter((message) => {
-      return message.chat === chatId;
-    });
-    return setFilteredMessages([...filtered]);
-  };
-
-  const addMessageToChat = ({ chat, sender, message }) => {
-    setSelectedChat({ ...selectedChat, messages: [...messages, { chat, sender, message }] });
-  };
-
-  const newMessage = (contactName, contactId) => {
-    const filteredChat = chats.filter((chat) => {
-      return chat.private === true && chat.users.length === 2;
-    });
-    if (filteredChat) setSelectedChat(formattedChat(filteredChat[0]));
-    if (!filteredChat) newPrivateChat(`${contactName} ${user.username}`, contactId);
-  };
-
-  useEffect(() => {
-    if (!socket) return null;
-
-    socket.on('receive-message', addMessageToChat);
-
-    return () => socket.off('receive-message', addMessageToChat);
-  }, [socket, addMessageToChat]);
-
-  const sendMessage = (text) => {
-    socket.emit('send-message', { chatId: selectedChat._id, message: text });
-  };
+  useEffect(async () => {
+    if (user) {
+      await getChats();
+    }
+  }, [user]);
 
   const value = {
     selectedChat,
+    chats,
+    getChats,
+    setChats,
     formattedChat: formattedChat(selectedChat),
     formattedChats: formattedChats(chats),
     setSelectedChat,
-    newMessage,
-    sendMessage,
-    messages,
-    filterMessages,
-    filteredMessages,
+    newChat,
+    newPrivateChat,
+    joinChat,
+    leaveChat,
+    clearChat,
+    deleteChat,
+    addChatUser,
+    removeChatUser,
+    makeAdmin,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

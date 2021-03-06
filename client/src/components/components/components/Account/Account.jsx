@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, makeStyles } from '@material-ui/core';
-import { useAPI } from '../../../../contexts/APIProvider';
+import { useUser } from '../../../../contexts/UserProvider';
 import AccountMenu from './components/AccountMenu';
 
 const useStyles = makeStyles(() => ({
@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
 
 const Account = () => {
   const classes = useStyles();
-  const { user } = useAPI();
+  const { user } = useUser();
 
   return (
     <Grid
