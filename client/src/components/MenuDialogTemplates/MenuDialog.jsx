@@ -1,10 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogTitle, Button } from '@material-ui/core';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContentText,
+  Button,
+  Box,
+  makeStyles,
+} from '@material-ui/core';
+
+const useStyles = makeStyles(() => ({
+  root: {
+    padding: '2rem',
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center',
+    '& > *': { padding: '1.5rem' },
+  },
+  buttons: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+}));
 
 const MenuDialog = ({ dialogOpen, setDialogOpen, values, chat }) => {
+  const classes = useStyles();
   const handleDialogClose = () => {
-    console.log(dialogOpen);
     setDialogOpen(false);
   };
 
@@ -16,9 +37,18 @@ const MenuDialog = ({ dialogOpen, setDialogOpen, values, chat }) => {
 
   return (
     <Dialog open={dialogOpen} onClose={handleDialogClose}>
-      <DialogTitle>{values.title}</DialogTitle>
-      <Button onClick={handleSubmit}>Yes</Button>
-      <Button onClick={handleDialogClose}>Cancel</Button>
+      <Box className={classes.root}>
+        <DialogTitle>{values.title}</DialogTitle>
+        <DialogContentText>{values.content}</DialogContentText>
+        <Box className={classes.buttons}>
+          <Button color="primary" onClick={handleSubmit}>
+            Submit
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleDialogClose}>
+            Cancel
+          </Button>
+        </Box>
+      </Box>
     </Dialog>
   );
 };

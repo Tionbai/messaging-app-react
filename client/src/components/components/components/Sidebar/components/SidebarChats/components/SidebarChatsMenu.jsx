@@ -33,27 +33,33 @@ const SidebarChatsMenu = ({ chat }) => {
 
   const values = {
     leaveChat: {
-      title: 'Are you sure you want to leave chat?',
+      title: 'Leave chat',
+      content: 'Are you sure you want to leave chat?',
       submitFunc: leaveChat,
     },
     deleteChat: {
-      title: 'Are you sure you want to delete chat? This action is irreversible.',
+      title: 'Delete chat',
+      content: 'Are you sure you want to delete chat? This action is irreversible.',
       submitFunc: deleteChat,
     },
     clearChat: {
-      title: 'Are you sure you want to delete all messages? This action is irreversible.',
+      title: 'Clear chat',
+      content: 'Are you sure you want to delete all messages? This action is irreversible.',
       submitFunc: clearChat,
     },
     addChatUser: {
-      title: 'Choose contact to add to the chat.',
+      title: 'Invite user',
+      content: 'Choose contact to add to the chat.',
       submitFunc: addChatUser,
     },
     removeChatUser: {
-      title: 'Choose contact to remove from the chat.',
+      title: 'Remove user',
+      content: 'Choose contact to remove from the chat.',
       submitFunc: removeChatUser,
     },
     makeAdmin: {
-      title: 'Choose contact to make admin.',
+      title: 'Give admin rights',
+      content: 'Choose contact to make admin.',
       submitFunc: makeAdmin,
     },
   };
@@ -131,5 +137,5 @@ const SidebarChatsMenu = ({ chat }) => {
 export default SidebarChatsMenu;
 
 SidebarChatsMenu.propTypes = {
-  chat: Object(PropTypes.array).isRequired,
+  chat: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 };

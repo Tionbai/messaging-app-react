@@ -16,7 +16,8 @@ const AccountMenu = () => {
 
   const values = {
     deleteUser: {
-      title: 'Are you sure you want to delete account? This action is irreversible.',
+      title: 'Delete account',
+      content: 'Are you sure you want to delete account? This action is irreversible.',
       placeholder: ['Type in your username or email', 'Type in your password'],
       submitFunc: deleteUser,
     },
