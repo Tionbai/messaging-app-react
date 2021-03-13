@@ -1,60 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Menu,
-  List,
-  ListItem,
-  Typography,
-  IconButton,
-  makeStyles,
-} from '@material-ui/core';
+import { Box, Menu, List, ListItem, Typography, IconButton } from '@material-ui/core';
 import { ExpandMore, DeleteForever } from '@material-ui/icons';
-import MenuItemTemplate from '../../../../MenuTemplates/MenuItemTemplate';
-import { useMessages } from '../../../../../contexts/MessagesProvider';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: 5,
-    paddingRight: 5,
-    marginTop: 10,
-    alignSelf: 'flex-start',
-    position: 'relative',
-  },
-  message: {
-    width: 'fit-content',
-    borderRadius: '10px',
-    padding: '5px 10px',
-  },
-  sender: {
-    margin: '2px 3px',
-    color: 'grey',
-  },
-  fromMe: {
-    backgroundColor: '#2979ff',
-    color: 'white',
-  },
-  toMe: {
-    backgroundColor: '#f5f5f5',
-  },
-  messageContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  messageMenuLeft: {
-    order: 0,
-  },
-  messageMenuRight: {
-    order: 1,
-  },
-}));
+import MenuItemTemplate from '../../../../../MenuTemplates/MenuItemTemplate';
+import { useMessages } from '../../../../../../contexts/MessagesProvider';
+import ChatMessageStyles from './styles/ChatMessageStyles';
 
 const ChatMessage = React.forwardRef(({ lastMessage, message }, ref) => {
   const { deleteMessage } = useMessages();
-  const classes = useStyles();
+  const classes = ChatMessageStyles();
   const [showTime, setShowTime] = useState(false);
   const [hover, setHover] = useState(false);
   const [menu, setMenu] = useState(false);

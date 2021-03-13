@@ -1,36 +1,11 @@
 import React, { useState } from 'react';
-import { Box, IconButton, InputBase, makeStyles } from '@material-ui/core';
+import { Box, IconButton, InputBase } from '@material-ui/core';
 import { Send } from '@material-ui/icons/';
-import { useMessages } from '../../../../../contexts/MessagesProvider';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textfield: {
-    width: '92.5%',
-    resize: 'none',
-    margin: '5px 5px',
-    padding: '2px 10px',
-    backgroundColor: 'white',
-    border: '1px solid lightgrey',
-    borderRadius: '30px',
-    height: '70px',
-  },
-  iconfield: {
-    width: '7.5%',
-    textAlign: 'center',
-  },
-  icon: {
-    backgroundColor: '#2979ff',
-    color: 'white',
-  },
-}));
+import { useMessages } from '../../../../../../contexts/MessagesProvider';
+import ChatFormStyles from './styles/ChatFormStyles';
 
 const ChatForm = () => {
-  const classes = useStyles();
+  const classes = ChatFormStyles();
   const [text, setText] = useState('');
   const { sendMessage } = useMessages();
 

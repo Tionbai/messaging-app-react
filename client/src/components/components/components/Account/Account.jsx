@@ -1,17 +1,11 @@
 import React from 'react';
-import { Grid, Typography, makeStyles } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { useUser } from '../../../../contexts/UserProvider';
-import AccountMenu from './components/AccountMenu';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    padding: '10px',
-    height: 75,
-  },
-}));
+import AccountMenu from './components/AccountMenu/AccountMenu';
+import AccountStyles from './styles/AccountStyles';
 
 const Account = () => {
-  const classes = useStyles();
+  const classes = AccountStyles();
   const { user } = useUser();
 
   return (

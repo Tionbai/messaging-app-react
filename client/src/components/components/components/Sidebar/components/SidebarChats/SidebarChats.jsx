@@ -4,7 +4,7 @@ import { List, Grid, IconButton, ListItem, Typography } from '@material-ui/core'
 import { ForumOutlined, Person } from '@material-ui/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { useChat } from '../../../../../../contexts/ChatProvider';
-import SidebarChatsMenu from './components/SidebarChatsMenu';
+import SidebarChatsMenu from './components/SidebarChatsMenu/SidebarChatsMenu';
 
 const SidebarChats = ({ classes, filteredChats, search, setSearch }) => {
   const { selectedChat, setSelectedChat } = useChat();

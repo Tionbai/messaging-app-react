@@ -1,32 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { Box, Divider, Typography, List, makeStyles } from '@material-ui/core';
+import { Box, Divider, Typography, List } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons/';
 import { v4 as uuidv4 } from 'uuid';
 import { useChat } from '../../../../contexts/ChatProvider';
 import ChatDetails from './components/ChatDetails';
-import ChatMessage from './components/ChatMessage';
-import ChatForm from './components/ChatForm';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  messages: {
-    '&::-webkit-scrollbar': { width: 0, backgroundColor: 'transparent' },
-    flex: 1,
-    overflow: 'scroll',
-  },
-}));
+import ChatMessage from './components/ChatMessage/ChatMessage';
+import ChatForm from './components/ChatForm/ChatForm';
+import ChatStyles from './styles/ChatStyles';
 
 const Chat = () => {
-  const classes = useStyles();
+  const classes = ChatStyles();
   const { selectedChat, formattedChat } = useChat();
   const lastMessageRef = useRef();
   const [showChatDetails, setShowChatDetails] = useState(false);

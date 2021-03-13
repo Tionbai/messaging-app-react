@@ -1,43 +1,19 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import { MoreVert, Add, Forum, PersonAdd, PersonAddDisabled } from '@material-ui/icons';
-import MenuContainerTemplate from '../../../../../../MenuTemplates/MenuContainerTemplate';
-import MenuItemTemplate from '../../../../../../MenuTemplates/MenuItemTemplate';
-import { useChat } from '../../../../../../../contexts/ChatProvider';
-import { useContacts } from '../../../../../../../contexts/ContactsProvider';
-import MenuDialogWithInput from '../../../../../../MenuDialogTemplates/MenuDialogWithInput';
-import MenuDialogWithSelect from '../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
+import MenuContainerTemplate from '../../../../../../../MenuTemplates/MenuContainerTemplate';
+import MenuItemTemplate from '../../../../../../../MenuTemplates/MenuItemTemplate';
+import MenuDialogWithInput from '../../../../../../../MenuDialogTemplates/MenuDialogWithInput';
+import MenuDialogWithSelect from '../../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
+import SidebarSearchFieldMenuValues from './components/SidebarSearchFieldMenuValues';
 
 const AccountMenu = () => {
-  const { newChat, joinChat } = useChat();
-  const { newContact, deleteContact } = useContacts();
   const [menu, setMenu] = useState(false);
   const [dialogWithInputOpen, setDialogWithInputOpen] = useState(false);
   const [dialogWithSelectOpen, setDialogWithSelectOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState();
   const [selectedContacts, setSelectedContacts] = useState([]);
-
-  const values = {
-    newChat: {
-      title: 'Create new chat',
-      placeholder: 'Type in chat name',
-      submitFunc: newChat,
-    },
-    joinChat: {
-      title: 'Join existing chat',
-      placeholder: 'Type in chat name',
-      submitFunc: joinChat,
-    },
-    newContact: {
-      title: 'Add new contact',
-      placeholder: "Type in the user's username or email",
-      submitFunc: newContact,
-    },
-    deleteContact: {
-      title: 'Delete contact',
-      submitFunc: deleteContact,
-    },
-  };
+  const values = SidebarSearchFieldMenuValues();
 
   const handleClickOpenDialogWithInput = (e, value) => {
     e.preventDefault();
@@ -45,6 +21,7 @@ const AccountMenu = () => {
     setSelectedValue(value);
     setDialogWithInputOpen(true);
   };
+
   const handleClickOpenDialogWithSelect = (e, value) => {
     e.preventDefault();
     e.stopPropagation();

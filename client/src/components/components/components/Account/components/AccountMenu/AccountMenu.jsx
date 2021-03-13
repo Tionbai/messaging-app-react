@@ -1,27 +1,18 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import { AccountCircle, ExitToApp, DeleteForever } from '@material-ui/icons';
-import MenuContainerTemplate from '../../../../MenuTemplates/MenuContainerTemplate';
-import MenuItemTemplate from '../../../../MenuTemplates/MenuItemTemplate';
-import { useUser } from '../../../../../contexts/UserProvider';
-import { useAPI } from '../../../../../contexts/APIProvider';
-import MenuDialogWithInputs from '../../../../MenuDialogTemplates/MenuDialogWithInputs';
+import MenuContainerTemplate from '../../../../../MenuTemplates/MenuContainerTemplate';
+import MenuItemTemplate from '../../../../../MenuTemplates/MenuItemTemplate';
+import { useAPI } from '../../../../../../contexts/APIProvider';
+import MenuDialogWithInputs from '../../../../../MenuDialogTemplates/MenuDialogWithInputs';
+import AccountMenuValues from './components/AccountMenuValues';
 
 const AccountMenu = () => {
   const { setToken } = useAPI();
-  const { deleteUser } = useUser();
   const [menu, setMenu] = useState(false);
   const [dialogWithInputsOpen, setDialogWithInputsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState();
-
-  const values = {
-    deleteUser: {
-      title: 'Delete account',
-      content: 'Are you sure you want to delete account? This action is irreversible.',
-      placeholder: ['Type in your username or email', 'Type in your password'],
-      submitFunc: deleteUser,
-    },
-  };
+  const values = AccountMenuValues();
 
   const handleLogout = (e) => {
     e.preventDefault();

@@ -10,59 +10,19 @@ import {
   PersonAddDisabled,
   TransferWithinAStation,
 } from '@material-ui/icons';
-import MenuContainerTemplate from '../../../../../../MenuTemplates/MenuContainerTemplate';
-import MenuItemTemplate from '../../../../../../MenuTemplates/MenuItemTemplate';
-import MenuDialog from '../../../../../../MenuDialogTemplates/MenuDialog';
-import MenuDialogWithSelect from '../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
-import { useChat } from '../../../../../../../contexts/ChatProvider';
+import MenuContainerTemplate from '../../../../../../../MenuTemplates/MenuContainerTemplate';
+import MenuItemTemplate from '../../../../../../../MenuTemplates/MenuItemTemplate';
+import MenuDialog from '../../../../../../../MenuDialogTemplates/MenuDialog';
+import MenuDialogWithSelect from '../../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
+import SidebarChatsMenuValues from './components/SidebarChatsMenuValues';
 
 const SidebarChatsMenu = ({ chat }) => {
-  const {
-    leaveChat,
-    deleteChat,
-    clearChat,
-    addChatUser,
-    removeChatUser,
-    makeAdmin,
-  } = useChat();
   const [menu, setMenu] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogWithSelectOpen, setDialogWithSelectOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState();
   const [selectedContacts, setSelectedContacts] = useState([]);
-
-  const values = {
-    leaveChat: {
-      title: 'Leave chat',
-      content: 'Are you sure you want to leave chat?',
-      submitFunc: leaveChat,
-    },
-    deleteChat: {
-      title: 'Delete chat',
-      content: 'Are you sure you want to delete chat? This action is irreversible.',
-      submitFunc: deleteChat,
-    },
-    clearChat: {
-      title: 'Clear chat',
-      content: 'Are you sure you want to delete all messages? This action is irreversible.',
-      submitFunc: clearChat,
-    },
-    addChatUser: {
-      title: 'Invite user',
-      content: 'Choose contact to add to the chat.',
-      submitFunc: addChatUser,
-    },
-    removeChatUser: {
-      title: 'Remove user',
-      content: 'Choose contact to remove from the chat.',
-      submitFunc: removeChatUser,
-    },
-    makeAdmin: {
-      title: 'Give admin rights',
-      content: 'Choose contact to make admin.',
-      submitFunc: makeAdmin,
-    },
-  };
+  const values = SidebarChatsMenuValues();
 
   const handleClickOpenDialog = (e, value) => {
     e.preventDefault();

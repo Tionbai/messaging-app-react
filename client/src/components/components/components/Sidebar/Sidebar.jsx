@@ -1,45 +1,14 @@
 import React, { useState } from 'react';
-import { Box, makeStyles } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { useContacts } from '../../../../contexts/ContactsProvider';
 import { useChat } from '../../../../contexts/ChatProvider';
 import SidebarChats from './components/SidebarChats/SidebarChats';
 import SidebarContacts from './components/SidebarContacts/SidebarContacts';
 import SidebarSearchField from './components/SidebarSearchField/SidebarSearchField';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    maxWidth: 350,
-  },
-  searchfield: {
-    height: 75,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  common: {
-    textTransform: 'none',
-    height: 90,
-    borderBottom: '1px solid lightgrey',
-  },
-  title: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    color: 'dimgrey',
-  },
-  icon: {
-    backgroundColor: 'white',
-    border: '1px solid darkgrey',
-  },
-  subtitle: {
-    fontWeight: 'bold',
-  },
-  selected: { backgroundColor: '#e8f4fd' },
-  first: { borderTop: '1px solid lightgrey' },
-}));
+import SidebarStyles from './styles/SidebarStyles';
 
 const Sidebar = () => {
-  const classes = useStyles();
+  const classes = SidebarStyles();
   const { contacts } = useContacts();
   const { formattedChats } = useChat();
   const [filteredChats, setFilteredChats] = useState(formattedChats);

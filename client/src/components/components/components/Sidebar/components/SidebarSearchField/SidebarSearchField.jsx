@@ -1,42 +1,20 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Box, IconButton, InputBase, Divider, makeStyles } from '@material-ui/core';
+import { Box, IconButton, InputBase, Divider } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { useContacts } from '../../../../../../contexts/ContactsProvider';
 import { useChat } from '../../../../../../contexts/ChatProvider';
-import SidebarSearchFieldMenu from './components/SidebarSearchFieldMenu';
+import SidebarSearchFieldMenu from './components/SidebarSearchFieldMenu/SidebarSearchFieldMenu';
+import SidebarSearchFieldStyles from './styles/SidebarSearchFieldStyles';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: '10px 10px 0px 10px',
-    padding: '2px 10px',
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    border: '1px solid lightgrey',
-    borderRadius: '30px',
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}));
-
-export default function SidebarSearchField({
+const SidebarSearchField = ({
   valueString,
   setFilteredChats,
   setFilteredContacts,
   search,
   setSearch,
-}) {
-  const classes = useStyles();
+}) => {
+  const classes = SidebarSearchFieldStyles();
   const { contacts } = useContacts();
   const { formattedChats } = useChat();
 
@@ -79,7 +57,9 @@ export default function SidebarSearchField({
       <SidebarSearchFieldMenu />
     </Box>
   );
-}
+};
+
+export default SidebarSearchField;
 
 SidebarSearchField.propTypes = {
   valueString: PropTypes.string.isRequired,
