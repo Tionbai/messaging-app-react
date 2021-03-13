@@ -54,6 +54,7 @@ const ChatProvider = ({ children }) => {
       setChats([...chats, response.data]);
       return response.data;
     } catch (err) {
+      console.log(err);
       return err.response;
     }
   };

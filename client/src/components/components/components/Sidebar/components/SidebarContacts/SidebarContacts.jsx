@@ -5,9 +5,11 @@ import { Person } from '@material-ui/icons/';
 import { v4 as uuidv4 } from 'uuid';
 import SidebarContactsMenu from './components/SidebarContactsMenu';
 import { useChat } from '../../../../../../contexts/ChatProvider';
+import { useMessages } from '../../../../../../contexts/MessagesProvider';
 
 const Contacts = ({ classes, filteredContacts, search, setSearch }) => {
-  const { newMessage, formattedChats, setSelectedChat } = useChat();
+  const { formattedChats, setSelectedChat } = useChat();
+  const { newMessage } = useMessages();
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -48,9 +50,7 @@ const Contacts = ({ classes, filteredContacts, search, setSearch }) => {
             </Grid>
           </Grid>
           <Grid item>
-            <SidebarContactsMenu
-              newMessage={() => newMessage(contact.username, contact._id)}
-            />
+            <SidebarContactsMenu newMessage={newMessage} />
           </Grid>
         </ListItem>
       ))}

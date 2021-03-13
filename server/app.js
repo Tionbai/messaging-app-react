@@ -13,7 +13,7 @@ app.use('/chat', require('./routes/chat.js'));
 app.use('/user', require('./routes/user.js'));
 app.use('/message', require('./routes/message.js'));
 
-// Setup error handlers
+// Set up error handlers
 app.use(errorHandlers.notFound);
 app.use(errorHandlers.mongooseError);
 if (process.env.ENV === 'DEVELOPMENT') {

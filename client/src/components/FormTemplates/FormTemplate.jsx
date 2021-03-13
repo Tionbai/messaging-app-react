@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Grid, makeStyles } from '@material-ui/core';
+import { Button, Grid, makeStyles, Fade } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import FormTextfieldTemplate from './FormTextfieldTemplate';
 import FormLinkButtonTemplate from './FormLinkButtonTemplate';
+import { useAPI } from '../../contexts/APIProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiFormControl-root': { width: '80%', margin: theme.spacing(1) },
     '& .MuiButtonBase-root': { margin: theme.spacing(1) },
   },
+  alert: {
+    transition: 'width 0.5s ease-in-out',
+    margin: theme.spacing(2),
+  },
 }));
 
 const FormTemplate = ({ setValues, values, submitFunc, links, children }) => {
+  const { APIError, setAPIError } = useAPI();
   const classes = useStyles();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,8 +27,22 @@ const FormTemplate = ({ setValues, values, submitFunc, links, children }) => {
     submitFunc();
   };
 
+  useEffect(() => {
+    setAPIError();
+  }, []);
+
   return (
     <form onSubmit={handleSubmit} className={classes.root}>
+      {APIError &&
+        APIError.map((error) => {
+          return (
+            <Fade in={Boolean(APIError)}>
+              <Alert severity="error" className={classes.alert}>
+                {error.message}
+              </Alert>
+            </Fade>
+          );
+        })}
       <Grid container direction="column">
         {Object.entries(values).map((entry) => (
           <Grid item key={entry[0]}>

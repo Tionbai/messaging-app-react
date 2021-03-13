@@ -77,6 +77,7 @@ mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+mongoose.set('useCreateIndex', true);
 
 mongoose.connection.on('error', (err) => {
   console.log('Mongoose connection error: ' + err.message);

@@ -58,9 +58,8 @@ const MenuDialog = ({ dialogOpen, setDialogOpen, values, chat }) => {
 export default MenuDialog;
 
 MenuDialog.propTypes = {
-  dialogOpen: PropTypes.func.isRequired,
+  dialogOpen: PropTypes.bool.isRequired,
   setDialogOpen: PropTypes.func.isRequired,
   values: Object(PropTypes.object).isRequired,
-  submitFunc: PropTypes.func.isRequired,
   chat: Object(PropTypes.object).isRequired,
 };

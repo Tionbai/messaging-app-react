@@ -19,7 +19,6 @@ exports.catchErrors = (fn) => {
 
 // MongoDB validation error handler
 
-// Detect if there are mongoDB validation errors so that we send them nicely back.
 exports.mongooseError = (err, req, res, next) => {
   if (!err.errors) return next(err);
   const errorKeys = Object.keys(err.errors);
@@ -35,7 +34,6 @@ exports.mongooseError = (err, req, res, next) => {
 
 // Development error handler
 
-// In development we show good error messages so if we hit a syntax error or any other error, we get a message explaining.
 exports.developmentErrors = (err, req, res, next) => {
   err.stack = err.stack || '';
 

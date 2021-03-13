@@ -16,7 +16,7 @@ const MessagesProvider = ({ children }) => {
   const [filteredMessages, setFilteredMessages] = useState();
   const socket = useSocket();
   const { user } = useUser();
-  const { chats, selectedChat, setSelectedChat, formattedChat, newPrivateChat } = useChat();
+  const { chats, selectedChat, setSelectedChat, newPrivateChat } = useChat();
   const { APIdelete } = useAPI();
 
   // Delete a single message.
@@ -52,10 +52,14 @@ const MessagesProvider = ({ children }) => {
   };
 
   const newMessage = (contactName, contactId) => {
-    const filteredChat = chats.filter((chat) => {
-      return chat.private === true && chat.users.length === 2;
+    const filteredChat = chats.find((chat) => {
+      return (
+        chat.private === true &&
+        chat.users.length === 2 &&
+        chat.name.toLowerCase().includes(contactName.toLowerCase())
+      );
     });
-    if (filteredChat) setSelectedChat(formattedChat(filteredChat[0]));
+    if (filteredChat) setSelectedChat(filteredChat[0]);
     if (!filteredChat) newPrivateChat(`${contactName} ${user.username}`, contactId);
   };
 

@@ -11,16 +11,8 @@ const useUser = () => {
 };
 
 const UserProvider = ({ children }) => {
-  const { token, setToken, APIpost, APIget, APIDeleteConfig } = useAPI();
+  const { token, setToken, APIpost, APIget, APIDeleteConfig, setAPIError } = useAPI();
   const [user, setUser] = useState(null);
-
-  // // Set and remove API response message after a short time.
-  // const setApiResponseMessageFunc = (value) => {
-  //   setApiResponseMessage(value);
-  //   setTimeout(() => {
-  //     setApiResponseMessage('');
-  //   }, 5000);
-  // };
 
   // // Return specific error message based on given type parameter.
   // const typeError = (type) => {
@@ -46,6 +38,7 @@ const UserProvider = ({ children }) => {
       history.push('/login');
       return response.data;
     } catch (err) {
+      setAPIError([...err.response.data]);
       return err.response.data;
     }
   };
@@ -64,6 +57,7 @@ const UserProvider = ({ children }) => {
       localStorage.setItem('CHAT_Token', response.data.token);
       return setUser(loggedInUser);
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };

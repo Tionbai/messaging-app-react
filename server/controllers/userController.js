@@ -67,7 +67,7 @@ exports.register = async (req, res) => {
       message: `User ${username} registered successfully.`,
     });
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -99,7 +99,7 @@ exports.login = async (req, res) => {
       });
     });
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -115,7 +115,7 @@ exports.getUser = async (req, res) => {
       res.json(result);
     });
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -176,7 +176,7 @@ exports.delete = async (req, res) => {
           chat.delete();
         }
       } catch (err) {
-        console.error(err);
+        throw err;
       }
     });
 
@@ -197,7 +197,7 @@ exports.delete = async (req, res) => {
           });
         });
       } catch (err) {
-        console.error(err);
+        throw err;
       }
     });
 
@@ -209,7 +209,7 @@ exports.delete = async (req, res) => {
 
     res.json(userId);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -248,7 +248,7 @@ exports.newContact = async (req, res) => {
 
     res.json(userExists);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -287,6 +287,6 @@ exports.deleteContact = async (req, res) => {
 
     res.json(userExists._id);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };

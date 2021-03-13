@@ -11,6 +11,7 @@ const useAPI = () => {
 
 const APIProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('CHAT_Token'));
+  const [APIError, setAPIError] = useState();
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -20,8 +21,12 @@ const APIProvider = ({ children }) => {
     return axios.get(route, { headers });
   };
 
-  const APIpost = (route, body) => {
-    return axios.post(route, body, { headers });
+  const APIpost = async (route, body) => {
+    try {
+      return axios.post(route, body, { headers });
+    } catch (err) {
+      return console.log(err);
+    }
   };
 
   const APIput = (route, body) => {
@@ -36,7 +41,17 @@ const APIProvider = ({ children }) => {
     return axios.delete(route, config);
   };
 
-  const value = { token, setToken, APIget, APIpost, APIput, APIdelete, APIDeleteConfig };
+  const value = {
+    token,
+    setToken,
+    APIget,
+    APIpost,
+    APIput,
+    APIdelete,
+    APIDeleteConfig,
+    APIError,
+    setAPIError,
+  };
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
 };

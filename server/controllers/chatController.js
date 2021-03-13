@@ -24,7 +24,7 @@ exports.getAllChats = async (req, res) => {
     );
     await res.json(populatedChats);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -56,7 +56,7 @@ exports.newChat = async (req, res) => {
 
     res.json(chat);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -94,7 +94,7 @@ exports.newPrivateChat = async (req, res) => {
 
     res.json(chat);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -122,7 +122,7 @@ exports.joinChat = async (req, res) => {
 
     res.json(chat);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -154,7 +154,7 @@ exports.leaveChat = async (req, res) => {
 
     res.json(chatWithUser.name);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -190,7 +190,7 @@ exports.clearChat = async (req, res) => {
 
     res.json(chatWithUserAsAdmin.name);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -226,7 +226,7 @@ exports.addChatUser = async (req, res) => {
 
     res.json(chatWithUserAsAdmin.name);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -266,7 +266,7 @@ exports.removeChatUser = async (req, res) => {
     });
     res.json(chatWithUserAsAdmin.name);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -302,7 +302,7 @@ exports.makeAdmin = async (req, res) => {
 
     res.json(chatWithUserAsAdmin.name);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -331,6 +331,6 @@ exports.deleteChat = async (req, res) => {
       message: `${chatWithAdmin.name} was successfully deleted.`,
     });
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };

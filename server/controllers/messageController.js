@@ -26,7 +26,7 @@ exports.newMessage = async (req, res) => {
 
     res.json(createdMessage);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -54,6 +54,6 @@ exports.deleteMessage = async (req, res) => {
 
     res.json(message._id);
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
