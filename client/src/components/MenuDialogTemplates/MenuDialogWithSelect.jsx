@@ -8,13 +8,16 @@ import {
   makeStyles,
   Box,
   FormControl,
-  List,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { useContacts } from '../../contexts/ContactsProvider';
-import DialogCheckbox from './DialogCheckbox';
 
 const useStyles = makeStyles(() => ({
   root: {
+    minWidth: '30rem',
+    maxWidth: '100%',
     padding: '2rem',
     display: 'flex',
     flexDirection: 'column',
@@ -27,19 +30,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MenuDialogWithCheckbox = ({
-  dialogWithCheckboxOpen,
+const MenuDialogWithSelect = ({
+  dialogWithSelectOpen,
   selectedContacts,
   setSelectedContacts,
-  setDialogWithCheckboxOpen,
+  setDialogWithSelectOpen,
   values,
   chat,
 }) => {
   const { contacts } = useContacts();
   const classes = useStyles();
 
+  const handleChange = (e) => {
+    e.preventDefault();
+    setSelectedContacts(e.target.value);
+  };
+
   const handleDialogClose = () => {
-    setDialogWithCheckboxOpen(false);
+    setDialogWithSelectOpen(false);
   };
 
   const handleSubmit = (e) => {
@@ -47,27 +55,31 @@ const MenuDialogWithCheckbox = ({
     selectedContacts.map((selectedContact) => {
       return values.submitFunc(chat.name, selectedContact);
     });
-    setDialogWithCheckboxOpen(false);
+    setDialogWithSelectOpen(false);
   };
 
   return (
-    <Dialog open={dialogWithCheckboxOpen} onClose={handleDialogClose}>
+    <Dialog open={dialogWithSelectOpen} onClose={handleDialogClose}>
       <Box className={classes.root}>
         <DialogTitle>{values.title}</DialogTitle>
         <DialogContentText>{values.content}</DialogContentText>
-        <FormControl>
-          {contacts.map((contact) => {
-            return (
-              <List>
-                <DialogCheckbox
-                  key={contact.username}
-                  contact={contact}
-                  selectedContacts={selectedContacts}
-                  setSelectedContacts={setSelectedContacts}
-                />
-              </List>
-            );
-          })}
+        <FormControl variant="outlined">
+          <InputLabel id="select-label">Select contact</InputLabel>
+          <Select
+            multiple
+            labelId="select-label"
+            value={selectedContacts}
+            onChange={handleChange}
+            label="Select contact"
+          >
+            {contacts.map((contact) => {
+              return (
+                <MenuItem key={contact.username} value={contact.username}>
+                  {contact.username}
+                </MenuItem>
+              );
+            })}
+          </Select>
         </FormControl>
         <Box className={classes.buttons}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
@@ -82,11 +94,11 @@ const MenuDialogWithCheckbox = ({
   );
 };
 
-export default MenuDialogWithCheckbox;
+export default MenuDialogWithSelect;
 
-MenuDialogWithCheckbox.propTypes = {
-  dialogWithCheckboxOpen: PropTypes.bool.isRequired,
-  setDialogWithCheckboxOpen: PropTypes.func.isRequired,
+MenuDialogWithSelect.propTypes = {
+  dialogWithSelectOpen: PropTypes.bool.isRequired,
+  setDialogWithSelectOpen: PropTypes.func.isRequired,
   values: Object(PropTypes.object).isRequired,
   selectedContacts: Object(PropTypes.array).isRequired,
   setSelectedContacts: PropTypes.func.isRequired,

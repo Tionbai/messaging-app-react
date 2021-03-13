@@ -5,44 +5,38 @@ import MenuContainerTemplate from '../../../../../../MenuTemplates/MenuContainer
 import MenuItemTemplate from '../../../../../../MenuTemplates/MenuItemTemplate';
 import { useChat } from '../../../../../../../contexts/ChatProvider';
 import { useContacts } from '../../../../../../../contexts/ContactsProvider';
-import MenuDialog from '../../../../../../MenuDialogTemplates/MenuDialog';
 import MenuDialogWithInput from '../../../../../../MenuDialogTemplates/MenuDialogWithInput';
+import MenuDialogWithSelect from '../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
 
 const AccountMenu = () => {
   const { newChat, joinChat } = useChat();
   const { newContact, deleteContact } = useContacts();
   const [menu, setMenu] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogWithInputOpen, setDialogWithInputOpen] = useState(false);
+  const [dialogWithSelectOpen, setDialogWithSelectOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState();
+  const [selectedContacts, setSelectedContacts] = useState([]);
 
   const values = {
     newChat: {
-      title: 'New chat.',
+      title: 'Create new chat',
       placeholder: 'Type in chat name',
       submitFunc: newChat,
     },
     joinChat: {
-      title: 'Join existing chat.',
+      title: 'Join existing chat',
       placeholder: 'Type in chat name',
       submitFunc: joinChat,
     },
     newContact: {
-      title: 'Add new contact.',
+      title: 'Add new contact',
       placeholder: "Type in the user's username or email",
       submitFunc: newContact,
     },
     deleteContact: {
-      title: 'Are you sure you want to delete contact?',
+      title: 'Delete contact',
       submitFunc: deleteContact,
     },
-  };
-
-  const handleClickOpenDialog = (e, value) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedValue(value);
-    setDialogOpen(true);
   };
 
   const handleClickOpenDialogWithInput = (e, value) => {
@@ -50,6 +44,12 @@ const AccountMenu = () => {
     e.stopPropagation();
     setSelectedValue(value);
     setDialogWithInputOpen(true);
+  };
+  const handleClickOpenDialogWithSelect = (e, value) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedValue(value);
+    setDialogWithSelectOpen(true);
   };
 
   return (
@@ -73,21 +73,23 @@ const AccountMenu = () => {
         <MenuItemTemplate
           icon={<PersonAddDisabled />}
           string="Delete contact"
-          submitFunc={(e) => handleClickOpenDialog(e, values.deleteContact)}
+          submitFunc={(e) => handleClickOpenDialogWithSelect(e, values.deleteContact)}
         />
       </MenuContainerTemplate>
-      {dialogOpen && (
-        <MenuDialog
-          dialogOpen={dialogOpen}
-          setDialogOpen={setDialogOpen}
-          values={selectedValue}
-        />
-      )}
       {dialogWithInputOpen && (
         <MenuDialogWithInput
           dialogWithInputOpen={dialogWithInputOpen}
           setDialogWithInputOpen={setDialogWithInputOpen}
           values={selectedValue}
+        />
+      )}
+      {dialogWithSelectOpen && (
+        <MenuDialogWithSelect
+          dialogWithSelectOpen={dialogWithSelectOpen}
+          setDialogWithSelectOpen={setDialogWithSelectOpen}
+          values={selectedValue}
+          selectedContacts={selectedContacts}
+          setSelectedContacts={setSelectedContacts}
         />
       )}
     </Box>

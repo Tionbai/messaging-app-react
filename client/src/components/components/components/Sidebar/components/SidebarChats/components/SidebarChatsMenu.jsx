@@ -13,7 +13,7 @@ import {
 import MenuContainerTemplate from '../../../../../../MenuTemplates/MenuContainerTemplate';
 import MenuItemTemplate from '../../../../../../MenuTemplates/MenuItemTemplate';
 import MenuDialog from '../../../../../../MenuDialogTemplates/MenuDialog';
-import MenuDialogWithCheckbox from '../../../../../../MenuDialogTemplates/MenuDialogWithCheckbox';
+import MenuDialogWithSelect from '../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
 import { useChat } from '../../../../../../../contexts/ChatProvider';
 
 const SidebarChatsMenu = ({ chat }) => {
@@ -27,7 +27,7 @@ const SidebarChatsMenu = ({ chat }) => {
   } = useChat();
   const [menu, setMenu] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogWithCheckboxOpen, setDialogWithCheckboxOpen] = useState(false);
+  const [dialogWithSelectOpen, setDialogWithSelectOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState();
   const [selectedContacts, setSelectedContacts] = useState([]);
 
@@ -71,11 +71,11 @@ const SidebarChatsMenu = ({ chat }) => {
     setDialogOpen(true);
   };
 
-  const handleClickOpenDialogWithCheckbox = (e, value) => {
+  const handleClickOpenDialogWithSelect = (e, value) => {
     e.preventDefault();
     e.stopPropagation();
     setSelectedValue(value);
-    setDialogWithCheckboxOpen(true);
+    setDialogWithSelectOpen(true);
   };
 
   return (
@@ -99,17 +99,17 @@ const SidebarChatsMenu = ({ chat }) => {
         <MenuItemTemplate
           icon={<PersonAdd />}
           string="Add chat user"
-          submitFunc={(e) => handleClickOpenDialogWithCheckbox(e, values.addChatUser)}
+          submitFunc={(e) => handleClickOpenDialogWithSelect(e, values.addChatUser)}
         />
         <MenuItemTemplate
           icon={<PersonAddDisabled />}
           string="Remove chat user"
-          submitFunc={(e) => handleClickOpenDialogWithCheckbox(e, values.removeChatUser)}
+          submitFunc={(e) => handleClickOpenDialogWithSelect(e, values.removeChatUser)}
         />
         <MenuItemTemplate
           icon={<TransferWithinAStation />}
           string="Transfer admin rights"
-          submitFunc={(e) => handleClickOpenDialogWithCheckbox(e, values.makeAdmin)}
+          submitFunc={(e) => handleClickOpenDialogWithSelect(e, values.makeAdmin)}
         />
       </MenuContainerTemplate>
       {dialogOpen && (
@@ -120,10 +120,10 @@ const SidebarChatsMenu = ({ chat }) => {
           chat={chat}
         />
       )}
-      {dialogWithCheckboxOpen && (
-        <MenuDialogWithCheckbox
-          dialogWithCheckboxOpen={dialogWithCheckboxOpen}
-          setDialogWithCheckboxOpen={setDialogWithCheckboxOpen}
+      {dialogWithSelectOpen && (
+        <MenuDialogWithSelect
+          dialogWithSelectOpen={dialogWithSelectOpen}
+          setDialogWithSelectOpen={setDialogWithSelectOpen}
           values={selectedValue}
           selectedContacts={selectedContacts}
           setSelectedContacts={setSelectedContacts}

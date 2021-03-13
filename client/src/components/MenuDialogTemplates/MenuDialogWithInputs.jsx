@@ -14,11 +14,13 @@ import { useUser } from '../../contexts/UserProvider';
 
 const useStyles = makeStyles(() => ({
   root: {
+    minWidth: '30rem',
+    maxWidth: '100%',
     padding: '2rem',
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'center',
-    '& > *': { padding: '1.5rem' },
+    '& > * + *': { margin: '1.5rem' },
   },
   formControl: { padding: '0.75rem' },
   buttons: {
