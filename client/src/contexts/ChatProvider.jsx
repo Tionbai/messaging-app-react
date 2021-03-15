@@ -54,7 +54,6 @@ const ChatProvider = ({ children }) => {
       setChats([...chats, response.data]);
       return response.data;
     } catch (err) {
-      console.log(err);
       return err.response;
     }
   };
@@ -159,15 +158,6 @@ const ChatProvider = ({ children }) => {
 
   const formattedChat = (chat) => {
     if (chat && user) {
-      const privateChat = chat.private === true;
-
-      if (privateChat) {
-        const chatUserNames = chat.name.split(' ');
-        const privateChatName = chatUserNames.filter((chatUserName) => {
-          return chatUserName.toLowerCase() !== user.username.toLowerCase();
-        });
-        return { ...chat, privateChatName: privateChatName[0] };
-      }
       const newMessages = chat.messages.map((message) => {
         const fromMe = message.sender === user._id;
         const messageSender = chat.users.map((chatuser) => {
@@ -176,6 +166,15 @@ const ChatProvider = ({ children }) => {
         });
         return { ...message, fromMe, senderName: messageSender };
       });
+      const privateChat = chat.private === true;
+
+      if (privateChat) {
+        const chatUserNames = chat.name.split(' ');
+        const privateChatName = chatUserNames.filter((chatUserName) => {
+          return chatUserName.toLowerCase() !== user.username.toLowerCase();
+        });
+        return { ...chat, messages: newMessages, privateChatName: privateChatName[0] };
+      }
       return { ...chat, messages: newMessages };
     }
     return chat;
