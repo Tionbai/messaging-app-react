@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
-    flexGrow: 1,
+    flex: 1,
   },
   header: {
     display: 'flex',

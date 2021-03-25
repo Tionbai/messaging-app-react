@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, IconButton, InputBase } from '@material-ui/core';
+import { Box, IconButton } from '@material-ui/core';
 import { Send } from '@material-ui/icons/';
 import { useMessages } from '../../../../../../contexts/MessagesProvider';
 import ChatFormStyles from './styles/ChatFormStyles';
@@ -25,15 +25,14 @@ const ChatForm = () => {
   };
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
-      <InputBase
-        multiline
-        rows={Infinity}
-        as="textarea"
+      <div
+        role="presentation"
+        contentEditable
+        className={classes.textarea}
         required
         placeholder="Write something"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className={classes.textfield}
         onKeyDown={handleShiftEnter}
       />
       <Box className={classes.iconfield}>

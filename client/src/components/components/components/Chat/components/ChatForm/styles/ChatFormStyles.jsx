@@ -2,19 +2,26 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
+    margin: '1rem 0',
+    maxWidth: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    gap: '1rem',
   },
-  textfield: {
+  textarea: {
+    display: 'flex',
+    wordWrap: 'break-word',
+    wordBreak: 'break-all',
+    maxWidth: '92.5%',
     width: '92.5%',
-    resize: 'none',
-    margin: '5px 5px',
-    padding: '2px 10px',
-    backgroundColor: 'white',
     border: '1px solid lightgrey',
     borderRadius: '30px',
-    height: '70px',
+    padding: '1rem 2rem',
+    backgroundColor: 'white',
+    '&[contentEditable="true"]:empty:not(:focus):before': {
+      content: 'attr(placeholder)',
+    },
   },
   iconfield: {
     width: '7.5%',
@@ -23,6 +30,10 @@ const useStyles = makeStyles(() => ({
   icon: {
     backgroundColor: '#2979ff',
     color: 'white',
+    '&:hover': {
+      backgroundColor: 'white',
+      color: '#2979ff',
+    },
   },
 }));
 
