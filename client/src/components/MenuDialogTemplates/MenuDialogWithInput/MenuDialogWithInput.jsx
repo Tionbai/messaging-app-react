@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
@@ -7,29 +7,16 @@ import {
   FormControl,
   OutlinedInput,
   Box,
-  makeStyles,
+  Fade,
 } from '@material-ui/core';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    minWidth: '30rem',
-    maxWidth: '100%',
-    padding: '2rem',
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'center',
-    '& > * + *': { margin: '1.5rem' },
-  },
-  formControl: { padding: '0.75rem' },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-  },
-}));
+import { Alert } from '@material-ui/lab';
+import MenuDialogWithInputStyles from './styles/MenuDialogWithInputStyles';
+import { useAPI } from '../../../contexts/APIProvider';
 
 const MenuDialogWithInput = ({ dialogWithInputOpen, setDialogWithInputOpen, values }) => {
   const [inputValue, setInputValue] = useState('');
-  const classes = useStyles();
+  const classes = MenuDialogWithInputStyles();
+  const { APIError, setAPIError } = useAPI();
 
   const handleDialogClose = () => {
     setDialogWithInputOpen(false);
@@ -45,10 +32,24 @@ const MenuDialogWithInput = ({ dialogWithInputOpen, setDialogWithInputOpen, valu
     setInputValue(e.target.value);
   };
 
+  useEffect(() => {
+    setAPIError();
+  }, []);
+
   return (
     <Dialog open={dialogWithInputOpen} onClose={handleDialogClose}>
       <Box className={classes.root}>
         <DialogTitle>{values.title}</DialogTitle>
+        {APIError &&
+          APIError.map((error) => {
+            return (
+              <Fade in={Boolean(APIError)}>
+                <Alert severity="error" className={classes.alert}>
+                  {error.message || error}
+                </Alert>
+              </Fade>
+            );
+          })}
         <FormControl className={classes.formControl} onSubmit={handleSubmit}>
           <OutlinedInput placeholder={values.placeholder} onChange={handleChange} />
         </FormControl>

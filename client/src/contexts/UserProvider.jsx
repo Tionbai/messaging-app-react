@@ -68,6 +68,7 @@ const UserProvider = ({ children }) => {
       const response = await APIget(route);
       return setUser(await response.data);
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -87,6 +88,7 @@ const UserProvider = ({ children }) => {
       localStorage.removeItem('CHAT_Token');
       return response.data.message;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response.data.message;
     }
   };
@@ -97,7 +99,7 @@ const UserProvider = ({ children }) => {
   }, [loginUser]);
 
   useEffect(async () => {
-    await getUser();
+    if (token && !user) await getUser();
   }, []);
 
   const value = { registerUser, loginUser, deleteUser, user, token };

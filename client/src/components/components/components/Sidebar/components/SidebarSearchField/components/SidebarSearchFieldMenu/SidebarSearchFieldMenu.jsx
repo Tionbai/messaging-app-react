@@ -3,7 +3,7 @@ import { Box } from '@material-ui/core';
 import { MoreVert, Add, Forum, PersonAdd, PersonAddDisabled } from '@material-ui/icons';
 import MenuContainerTemplate from '../../../../../../../MenuTemplates/MenuContainerTemplate';
 import MenuItemTemplate from '../../../../../../../MenuTemplates/MenuItemTemplate';
-import MenuDialogWithInput from '../../../../../../../MenuDialogTemplates/MenuDialogWithInput';
+import MenuDialogWithInput from '../../../../../../../MenuDialogTemplates/MenuDialogWithInput/MenuDialogWithInput';
 import MenuDialogWithSelect from '../../../../../../../MenuDialogTemplates/MenuDialogWithSelect';
 import SidebarSearchFieldMenuValues from './components/SidebarSearchFieldMenuValues';
 

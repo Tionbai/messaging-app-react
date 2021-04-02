@@ -11,7 +11,7 @@ const useChat = () => {
 };
 
 const ChatProvider = ({ children }) => {
-  const { APIget, APIpost, APIput, APIdelete } = useAPI();
+  const { APIget, APIpost, APIput, APIdelete, setAPIError } = useAPI();
   const [chats, setChats] = useState([]);
   const { user } = useUser();
   const [selectedChat, setSelectedChat] = useState(chats[0]);
@@ -23,6 +23,7 @@ const ChatProvider = ({ children }) => {
       const response = await APIget(route);
       return setChats(response.data);
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -38,6 +39,7 @@ const ChatProvider = ({ children }) => {
       setChats([...chats, response.data]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -54,6 +56,7 @@ const ChatProvider = ({ children }) => {
       setChats([...chats, response.data]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -66,6 +69,7 @@ const ChatProvider = ({ children }) => {
       setChats([...chats.filter((chat) => chat.name !== chatName)]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -77,6 +81,7 @@ const ChatProvider = ({ children }) => {
       const response = await APIdelete(route);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -92,6 +97,7 @@ const ChatProvider = ({ children }) => {
       const response = await APIput(route, body);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -107,6 +113,7 @@ const ChatProvider = ({ children }) => {
       const response = await APIput(route, body);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -122,6 +129,7 @@ const ChatProvider = ({ children }) => {
       const response = await APIput(route, body);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -137,6 +145,7 @@ const ChatProvider = ({ children }) => {
       setChats([...chats, response.data]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -152,6 +161,7 @@ const ChatProvider = ({ children }) => {
       setChats([...chats.filter((chat) => chat.name !== response.data)]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -215,7 +225,8 @@ const ChatProvider = ({ children }) => {
     makeAdmin,
   };
 
-  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+  if (user) return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+  return null;
 };
 
 export { ChatProvider, useChat };

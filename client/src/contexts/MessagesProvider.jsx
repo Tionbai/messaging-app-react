@@ -17,7 +17,7 @@ const MessagesProvider = ({ children }) => {
   const socket = useSocket();
   const { user } = useUser();
   const { chats, selectedChat, setSelectedChat, newPrivateChat } = useChat();
-  const { APIdelete } = useAPI();
+  const { APIdelete, setAPIError } = useAPI();
 
   // Delete a single message.
   const deleteMessage = async (messageId) => {
@@ -29,6 +29,7 @@ const MessagesProvider = ({ children }) => {
       return response.data;
       // return setMessages([...response.data]);
     } catch (err) {
+      setAPIError([err.response.data]);
       console.log(err.response);
       return err.response;
     }

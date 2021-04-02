@@ -11,7 +11,7 @@ const useContacts = () => {
 };
 
 const ContactsProvider = ({ children }) => {
-  const { APIput, APIdelete } = useAPI();
+  const { APIput, APIdelete, setAPIError } = useAPI();
   const { user } = useUser();
   const [contacts, setContacts] = useState([]);
 
@@ -26,6 +26,7 @@ const ContactsProvider = ({ children }) => {
       setContacts([...user.contacts, response.data]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };
@@ -38,6 +39,7 @@ const ContactsProvider = ({ children }) => {
       setContacts([...contacts.filter((contact) => contact._id !== response.data)]);
       return response.data;
     } catch (err) {
+      setAPIError([err.response.data]);
       return err.response;
     }
   };

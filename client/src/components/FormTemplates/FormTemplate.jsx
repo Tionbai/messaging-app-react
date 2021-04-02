@@ -38,7 +38,7 @@ const FormTemplate = ({ setValues, values, submitFunc, links, children }) => {
           return (
             <Fade in={Boolean(APIError)}>
               <Alert severity="error" className={classes.alert}>
-                {error.message}
+                {error.message || error}
               </Alert>
             </Fade>
           );

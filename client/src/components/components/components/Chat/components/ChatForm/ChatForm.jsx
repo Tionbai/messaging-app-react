@@ -9,10 +9,16 @@ const ChatForm = () => {
   const [text, setText] = useState('');
   const { sendMessage } = useMessages();
 
+  const handleChange = (e) => {
+    e.preventDefault();
+    setText(e.target.textContent);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     sendMessage(text);
+    e.target.textContent = '';
     setText('');
   };
 
@@ -26,14 +32,17 @@ const ChatForm = () => {
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
       <div
-        role="presentation"
+        role="textbox"
+        aria-label="input"
+        tabIndex={0}
         contentEditable
         className={classes.textarea}
         required
         placeholder="Write something"
         value={text}
-        onChange={(e) => setText(e.target.value)}
         onKeyDown={handleShiftEnter}
+        onSubmit={handleSubmit}
+        onInput={handleChange}
       />
       <Box className={classes.iconfield}>
         <IconButton color="primary" variant="contained" type="submit" className={classes.icon}>

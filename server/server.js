@@ -1,5 +1,5 @@
 require('dotenv').config();
-const socket = require('socket.io');
+const ioRequire = require('socket.io');
 const jwt = require('jsonwebtoken');
 // Bring in all the models
 const mongoose = require('mongoose');
@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8000;
 
 const server = app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
-const io = socket(server, {
+const io = ioRequire(server, {
   cors: {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
@@ -22,10 +22,11 @@ const io = socket(server, {
 
 io.use(async (socket, next) => {
   try {
-    const token = socket.handshake.query.token;
+    const currentSocket = socket;
+    const { token } = currentSocket.handshake.query;
     const payload = jwt.verify(token, process.env.SECRET);
-    socket.userId = payload.id;
-    socket.join(socket.userId);
+    currentSocket.userId = payload.id;
+    currentSocket.join(currentSocket.userId);
     next();
   } catch (err) {
     console.log(err);
@@ -41,32 +42,28 @@ io.on('connection', (socket) => {
 
   socket.on('send-message', async ({ chatId, message }) => {
     if (message.trim().length > 0) {
-      const chat = await Chat.findOne({ _id: chatId });
-      const user = await User.findOne({ _id: socket.userId });
+      const chat = await Chat.findById(chatId);
+      const user = await User.findById(socket.userId);
 
-      chat.users.forEach((user) => {
-        io.to(user._id.toString()).emit('receive-message', {
+      chat.users.forEach((chatUser) => {
+        io.to(chatUser._id.toString()).emit('receive-message', {
           chat: chatId,
           sender: user._id.toString(),
-          message: message,
+          message,
         });
       });
 
       const newMessage = new Message({
         chat: chatId,
         sender: user._id,
-        message: message,
+        message,
       });
+
       await newMessage.save();
 
-      const updateDatabaseOnNewMessage = async (chatId, messageId) => {
-        const chat = await Chat.findOne({ _id: chatId });
-        
-        await chat.messages.push(messageId);
-        
-        await chat.save();
-      };
-      await updateDatabaseOnNewMessage(chatId, newMessage._id);
+      await chat.messages.push(newMessage._id);
+
+      await chat.save();
     }
   });
 });
@@ -80,7 +77,7 @@ mongoose.connect(process.env.DATABASE, {
 mongoose.set('useCreateIndex', true);
 
 mongoose.connection.on('error', (err) => {
-  console.log('Mongoose connection error: ' + err.message);
+  console.log(`Mongoose connection error: ${err.message}`);
 });
 
 mongoose.connection.once('open', async () => {

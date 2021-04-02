@@ -19,7 +19,7 @@
         "peerDependencies": false
       }
     ],
-    "no-underscore-dangle": ["error", { "allow": ["__filename", "__dirname"] }]
+    "no-underscore-dangle": ["error", { "allow": ["__filename", "__dirname", "_id"] }]
   },
   "root": true
 }
